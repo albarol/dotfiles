@@ -1,0 +1,4 @@
+function remake() {
+    make clean && make -j2
+}
+
