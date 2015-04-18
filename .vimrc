@@ -1,7 +1,8 @@
 
-""""""""""""""""""""""
-" => General
-""""""""""""""""""""""
+""""""""""""""
+" => General "
+""""""""""""""
+set sh=/bin/bash
 set t_Co=256
 set number
 set ls=2
@@ -9,8 +10,6 @@ set title
 set nocompatible
 filetype off
 
-set rtp+=~/.vim/bundle/vundle
-call vundle#rc()
 autocmd BufWritePre * :%s/\s\+$//e
 
 set ruler
@@ -30,26 +29,22 @@ set softtabstop=4
 set backspace=indent,eol,start
 set autoindent
 
-""""""""""""""""""""""
-" => Functions 
-""""""""""""""""""""""
-call pathogen#infect()
-call pathogen#helptags()
-filetype plugin indent on
-source ~/.vim/functions.vim
-
-"""""""""""""""""""""
-" => Mappings
-""""""""""""""""""""
-source ~/.vim/maps.vim
-
-""""""""""""""""""""""
-" => Scheme
-""""""""""""""""""""""
-colorscheme Monokai
-
-""""""""""""""""""""""
-" => Plugins 
-""""""""""""""""""""""
+""""""""""""""
+" => Plugins "
+""""""""""""""
 source ~/.vim/plugins.vim
 
+""""""""""""""""
+" => Functions "
+""""""""""""""""
+source ~/.vim/functions.vim
+
+"""""""""""""""
+" => Mappings "
+"""""""""""""""
+source ~/.vim/maps.vim
+
+"""""""""""""
+" => Scheme "
+"""""""""""""
+source ~/.vim/colors.vim

@@ -1,50 +1,52 @@
-﻿"""""""""""""""""""""""
-" Plugins
-""""""""""""""""""""""
+﻿"""""""""""
+" Plugins "
+"""""""""""
 
-Bundle 'gmarik/vundle'
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 
-Bundle 'tpope/vim-fugitive'
-Bundle 'Lokaltog/vim-easymotion'
-Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
-Bundle 'git://git.wincent.com/command-t.git'
-Bundle 'bling/vim-airline'
-Bundle 'https://github.com/kien/ctrlp.vim.git'
-Bundle 'https://github.com/majutsushi/tagbar.git'
-Bundle 'airblade/vim-gitgutter'
-Bundle 'https://github.com/scrooloose/nerdtree.git'
-"Bundle 'msanders/snipmate.vim'
-"Bundle 'git://github.com/klen/python-mode.git'
+" CVS (Content Version Control)
+Plugin 'airblade/vim-gitgutter'
+Plugin 'tpope/vim-fugitive'
 
-"""""""""""""""""
-" CtrlP 
-"""""""""""""""""
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.pyo,*.pyd
+" Prompt
+Plugin 'bling/vim-airline'
 
-let g:ctrlp_custom_ignore = {
-    \ 'dir': '\v[\/]\.(git|hg|svn)$',
-    \ }
+" Filesystem
+Plugin 'kien/ctrlp.vim.git'
+Plugin 'scrooloose/nerdtree.git'
 
-"""""""""""""""""
-" Airlines
-"""""""""""""""""
+" Python IDE
+Plugin 'klen/python-mode.git'
+Plugin 'tomtom/tlib_vim'
+Plugin 'majutsushi/tagbar'
+
+call vundle#end()
+filetype plugin indent on
+
+
+"""""""""""""""""""""""""
+" Plugins Confugiration "
+"""""""""""""""""""""""""
+
+" Prompt
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
 endif
 
-" unicode symbols
-"let g:airline_left_sep = '<'
-"let g:airline_left_sep = '<'
-"let g:airline_right_sep = '>'
-"let g:airline_right_sep = '>'
-"let g:airline_symbols.linenr = ''
-"let g:airline_symbols.linenr = ''
-"let g:airline_symbols.linenr = ''
-"let g:airline_symbols.branch = ''
 
-""""""""""""""""
-" Python-Mode
-""""""""""""""""
-"let g:pymode = 1
-"let g:pymode_folding = 0
+" Filesystem
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.pyo,*.pyd
+let g:ctrlp_custom_ignore = { 'dir': '\v[\/]\.(git|hg|svn)$', }
 
+
+" Python IDE
+let g:tagbar_autofocus = 1
+let g:tagbar_autoclose = 1
+
+set nofoldenable
+let g:pymode_lint_on_write = 1
+let g:pymode_lint_ignore = 'E501'
+let g:pymode_rope_goto_definition_cmd = 'tabnew'
+let g:pymode_rope_completion = 0
