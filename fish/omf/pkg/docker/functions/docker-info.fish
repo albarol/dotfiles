@@ -1,15 +1,10 @@
 function docker-info --description "Search for specific information inside docker container"
 
-    function info_help
+    if [ (count $argv) -ne 2 ]
         echo "Usage: docker-info container_name pattern"
         echo "Arguments:"
         echo \t"container_name"\t"Container name"
         echo \t"pattern"\t"Pattern (e.g. IpAddress)"
-        functions -e info_help
-    end
-
-    if [ (count $argv) -ne 2 ]
-        info_help
         return 1
     end
 

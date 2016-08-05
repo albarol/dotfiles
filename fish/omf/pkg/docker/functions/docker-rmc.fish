@@ -1,14 +1,9 @@
 function docker-rmc --description "Remove container based on name"
 
-    function info_help
+    if [ (count $argv) -ne 1 ]
         echo "Usage: docker-rmc container_name"
         echo "Arguments:"
         echo \t"container_name"\t"Container name"
-        functions -e info_help
-    end
-
-    if [ (count $argv) -ne 1 ]
-        info_help
         return 1
     end
 
