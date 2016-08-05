@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 
 if [ ! -x /usr/bin/fish ]; then
     echo "Installing fish"
