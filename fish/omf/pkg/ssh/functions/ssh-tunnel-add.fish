@@ -1,8 +1,5 @@
 function ssh-tunnel-add -d "Create ssh tunnel"
 
-    set DATABASE ~/.omf/ssh-tunnel.db
-    set SEP ";"
-
     ###################
     # Check parameters
     ###################
@@ -15,20 +12,12 @@ function ssh-tunnel-add -d "Create ssh tunnel"
         return 1
     end
 
-
-    #################
-    # Initial setup
-    #################
-    if not [ -d ~/.omf ]
-        mkdir ~/.omf
-    end
-
-    touch $DATABASE
+    touch $OMF_SSH_TUNNEL_DB
 
     #################
     # Adding into database
     #################
-    set HAS_KEY (grep -i "^$argv[1]$SEP" $DATABASE)
+    set HAS_KEY (grep -i "^$argv[1];" $OMF_SSH_TUNNEL_DB)
 
     if [ (count $HAS_KEY) -gt 0 ]
         echo "Alias \"$argv[1]\" already exists."
@@ -43,8 +32,8 @@ function ssh-tunnel-add -d "Create ssh tunnel"
        return 1
     end
 
-    echo "$argv[1]$SEP$argv[2]$SEP$argv[3]" >> $DATABASE
-    echo "$argv[1] added into $DATABASE"
+    echo "$argv[1];$argv[2];$argv[3]" >> $OMF_SSH_TUNNEL_DB
+    echo "$argv[1] added into $OMF_SSH_TUNNEL_DB"
     return 0
 end
 
