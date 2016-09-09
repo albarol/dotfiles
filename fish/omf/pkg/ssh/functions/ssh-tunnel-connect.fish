@@ -1,4 +1,4 @@
-function ssh-tunnel -d "Create ssh tunnel"
+function ssh-tunnel-connect -d "Create ssh tunnel"
 
     ###################
     # Check parameters
@@ -13,19 +13,19 @@ function ssh-tunnel -d "Create ssh tunnel"
     #################
     # Getting from database
     #################
-    set alias (grep -i "^$argv[1];" $OMF_SSH_TUNNEL_DB)
+    set params (settings-get $OMF_SSH_TUNNEL_DB $argv[1])
 
-    if [ (count $alias) -eq 0 ]
+    if [ (count $params) -eq 0 ]
         echo "Alias not \"$argv[1]\" exists."
         return 1
     end
 
-    set config (echo $alias | tr ";" "\n")
-    set host_pieces (echo $config[3] | tr ":" "\n")
+    set config (echo $params | tr ";" "\n")
+    set host_pieces (echo $config[2] | tr ":" "\n")
 
     echo "Connecting on the $host_pieces[1]:$host_pieces[2]"
     echo "Use 127.0.0.1:$host_pieces[3] to connect on the server"
-    ssh -L $host_pieces[3]:$host_pieces[1]:$host_pieces[2] $config[2] -N
+    ssh $config[1] -L $host_pieces[3]:$host_pieces[1]:$host_pieces[2] $config[1] -N
     return 0
 end
 

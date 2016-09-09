@@ -17,13 +17,6 @@ function ssh-tunnel-add -d "Create ssh tunnel"
     #################
     # Adding into database
     #################
-    set HAS_KEY (grep -i "^$argv[1];" $OMF_SSH_TUNNEL_DB)
-
-    if [ (count $HAS_KEY) -gt 0 ]
-        echo "Alias \"$argv[1]\" already exists."
-        return 1
-    end
-
     set host_pieces (echo $argv[3] | tr ":" "\n")
 
     if [ (count $host_pieces) -ne 3 ]
@@ -32,8 +25,7 @@ function ssh-tunnel-add -d "Create ssh tunnel"
        return 1
     end
 
-    echo "$argv[1];$argv[2];$argv[3]" >> $OMF_SSH_TUNNEL_DB
-    echo "$argv[1] added into $OMF_SSH_TUNNEL_DB"
+    settings-add $OMF_SSH_TUNNEL_DB $argv[1] "$argv[2];$argv[3]"
     return 0
 end
 

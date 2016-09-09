@@ -1,7 +1,5 @@
 function ssh-tunnel-remove -d "Remove alias for ssh-tunnel"
 
-    set TMP /tmp/ssh-tunnel.tmp
-
     ###################
     # Check parameters
     ###################
@@ -12,15 +10,7 @@ function ssh-tunnel-remove -d "Remove alias for ssh-tunnel"
         return 1
     end
 
-    touch $OMF_SSH_TUNNEL_DB
-
-    #################
-    # Removing from database
-    #################
-    grep -i -v "^$argv[1];" $OMF_SSH_TUNNEL_DB > $TMP
-    mv $TMP $OMF_SSH_TUNNEL_DB
-
-    echo "$argv[1] removed from $OMF_SSH_TUNNEL_DB"
+    settings-remove $OMF_SSH_TUNNEL_DB $argv[1]
     return 0
 end
 
