@@ -1,9 +1,5 @@
 function ssh-tunnel-remove -d "Remove alias for ssh-tunnel"
 
-    set DATABASE ~/.omf/ssh-tunnel.db
-    set SEP ";"
-    set TMP /tmp/ssh-tunnel.tmp
-
     ###################
     # Check parameters
     ###################
@@ -14,22 +10,7 @@ function ssh-tunnel-remove -d "Remove alias for ssh-tunnel"
         return 1
     end
 
-    #################
-    # Initial setup
-    #################
-    if not [ -d ~/.omf ]
-        mkdir ~/.omf
-    end
-
-    touch $DATABASE
-
-    #################
-    # Removing from database
-    #################
-    grep -i -v "^$argv[1]$SEP" $DATABASE > $TMP
-    mv $TMP $DATABASE
-
-    echo "$argv[1] removed from $DATABASE"
+    settings-remove $OMF_SSH_TUNNEL_DB $argv[1]
     return 0
 end
 
