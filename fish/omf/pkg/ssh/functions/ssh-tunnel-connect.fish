@@ -25,7 +25,7 @@ function ssh-tunnel-connect -d "Create ssh tunnel"
 
     echo "Connecting on the $host_pieces[1]:$host_pieces[2]"
     echo "Use 127.0.0.1:$host_pieces[3] to connect on the server"
-    ssh $config[1] -L $host_pieces[3]:$host_pieces[1]:$host_pieces[2] $config[1] -N
+    ssh -L $host_pieces[3]:$host_pieces[1]:$host_pieces[2] $config[1] -N
     return 0
 end
 
