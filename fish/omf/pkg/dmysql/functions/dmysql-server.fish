@@ -25,5 +25,13 @@ function dmysql-server -d "Start a new instance of MYSQL Server"
         end
     end
 
-    docker run -p 3306:3306 --name $CONTAINER_NAME -e MYSQL_ROOT_PASSWORD=$SERVER_PASSWORD -d mysql/mysql-server:$SERVER_TAG
+
+    set container (docker ps -a | grep -w $CONTAINER_NAME)
+
+    if [ (count $container) -gt 0 ]
+        docker start (echo $container | awk '{print $1}') 1> /dev/null
+        echo "$CONTAINER_NAME is running."
+    else
+        docker run -p 3306:3306 --name $CONTAINER_NAME -e MYSQL_ROOT_PASSWORD=$SERVER_PASSWORD -d mysql/mysql-server:$SERVER_TAG
+    end
 end
