@@ -16,7 +16,7 @@ function ssh-tunnel-connect -d "Create ssh tunnel"
     set params (settings-get $OMF_SSH_TUNNEL_DB $argv[1])
 
     if [ (count $params) -eq 0 ]
-        echo "Alias not \"$argv[1]\" exists."
+        echo "Alias \"$argv[1]\" does not exists."
         return 1
     end
 
