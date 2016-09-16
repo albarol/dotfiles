@@ -22,10 +22,16 @@ function ssh-tunnel-connect -d "Create ssh tunnel"
 
     set config (echo $params | tr ";" "\n")
     set host_pieces (echo $config[2] | tr ":" "\n")
+    set port_not_available (netstat -ln |grep ":$host_pieces[3]"|grep "LISTEN")
+    set port $host_pieces[3]
+
+    if [ (count $port_not_available) -gt 0 ]
+       set port (shuf -i $host_pieces[3]-3399 -n 1)
+    end
+
 
     echo "Connecting on the $host_pieces[1]:$host_pieces[2]"
-    echo "Use 127.0.0.1:$host_pieces[3] to connect on the server"
-    ssh -L $host_pieces[3]:$host_pieces[1]:$host_pieces[2] $config[1] -N
+    echo "Use 127.0.0.1:$port to connect on the server"
+    ssh -L $port:$host_pieces[1]:$host_pieces[2] $config[1] -N
     return 0
 end
-
