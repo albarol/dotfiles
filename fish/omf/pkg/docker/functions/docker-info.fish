@@ -11,7 +11,8 @@ function docker-info --description "Search for specific information inside docke
     set container $argv[1]
     set pattern $argv[2]
 
-    set result (docker ps -a | grep $container | awk '{print $1}' | xargs docker inspect | grep -i $pattern | tr '\n' ';')
-    echo $result | tr ';' '\n' | sed 's/[ \t]//g'
+    set result (docker ps -a -q --filter "name=$container" |xargs docker inspect |grep -i $pattern | tr '\n' ';')
+    printf "\e[1;33mDocker info\n===========\e[0m\n\n"
+    echo "$result" | tr ';' '\n' | sed 's/[ \t\",]//g'
     return 0
 end

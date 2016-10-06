@@ -9,11 +9,13 @@ function docker-remove --description "Remove container or image based on pattern
 
     set total (docker ps -a -q --filter "name=$argv[1]" | wc -l)
 
+    printf "\e[0;33mRemoving containers\e[0m\n"
     if [ $total -gt 0 ]
-        docker ps -a -q --filter "name=$argv[1]" | xargs docker rm >&2 > /dev/null
-        printf "$total containers were removed"
+        docker ps -a -q --filter "name=$argv[1]" | xargs docker rm 2>&3 > /dev/null
+        printf "\n\e[0;32mSUCCESS\e[0m: Containers has been removed\n"
     else
-        printf "\n\e[0;31mERROR:\e[0m there is no containers to be removed"
+        printf "\n\e[0;31mERROR:\e[0m There is no containers to be removed"
     end
+
     return 0
 end
