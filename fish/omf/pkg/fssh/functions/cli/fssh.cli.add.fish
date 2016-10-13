@@ -2,6 +2,12 @@
 function fssh.cli.add
     set fail_count 0
 
+    if [ (count $argv) -lt 2 ]
+        echo (omf::err)"Invalid arguments"(omf::off)
+        echo "Usage: fssh add <type> <params>"
+        return $OMF_MISSING_ARG
+    end
+
     if [ $argv[1] = 'mysql' ]
         fssh.cli.add.mysql $argv[2..-1]
     else if [ $argv[1] = 'ssh' ]
