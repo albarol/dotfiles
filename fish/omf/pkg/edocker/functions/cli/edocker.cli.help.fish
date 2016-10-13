@@ -47,7 +47,7 @@ Remove one or more containers
 Clean containers not used
 
 "(omf::dim)"Usage:"(omf::off)"
- edocker clean "(omf::em)"(week | month | year) [--force]"(omf::off)"
+ edocker clean "(omf::em)"(minute | hour | day | week | month | year) [--force]"(omf::off)"
 
 "(omf::dim)"Examples:"(omf::off)"
  edocker clean week
@@ -62,7 +62,7 @@ Clean containers not used
  edocker "(omf::em)"inspect"(omf::off)" <container> [--format]
  edocker "(omf::em)"remove"(omf::off)"  <container> [--force]
  edocker "(omf::em)"stop"(omf::off)"    (running | all)
- edocker "(omf::em)"clean"(omf::off)"   (week | month | year) [--force]
+ edocker "(omf::em)"clean"(omf::off)"   (minute | hour | day | week | month | year) [--force]
 
  "(omf::dim)"Commands:"(omf::off)"
  "(omf::em)"i"(omf::off)"nspect   Return low-level information on a container.
