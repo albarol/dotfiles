@@ -25,11 +25,17 @@ function edocker -d "Extended docker"
         case "r" "remove"
             edocker.cli.remove $arguments
 
+        case "l" "logs"
+            edocker.cli.logs $arguments
+
         case "stop"
             edocker.cli.stop $arguments
 
         case "clean"
             edocker.cli.clean $arguments
+
+        case "show"
+            edocker.show
 
         case "*"
             edocker.cli.help $arguments
