@@ -4,7 +4,9 @@ function fssh.connect
 
     if [ $params[1] = 'mysql' ]
         fssh.backends.mysql $params[2..-1]
-    else
+    else if [ $params[1] = 'ssh' ]
         fssh.backends.ssh $params[2..-1]
+    else
+        echo $params
     end
 end
