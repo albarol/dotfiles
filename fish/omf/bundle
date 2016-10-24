@@ -1,3 +1,6 @@
+package apt
+package await
+package hash
 package jump
 theme default
 theme yimmy
