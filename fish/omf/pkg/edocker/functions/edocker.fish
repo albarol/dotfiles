@@ -34,6 +34,9 @@ function edocker -d "Extended docker"
         case "clean"
             edocker.cli.clean $arguments
 
+        case "shutdown"
+            edocker.shutdown
+
         case "show"
             edocker.show
 

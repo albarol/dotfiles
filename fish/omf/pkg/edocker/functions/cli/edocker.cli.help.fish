@@ -42,15 +42,13 @@ Fetch the logs of a container
         case "stop"
             echo "\
 
-Stop one or more containers.
+Stop containers by name.
 
 "(omf::dim)"Usage:"(omf::off)"
- edocker stop "(omf::em)"running"(omf::off)" Stop running containers.
- edocker stop "(omf::em)"all"(omf::off)"     Stop all containers.
+ edocker stop "(omf::em)"<container>"(omf::off)" Stop containers.
 
 "(omf::dim)"Examples:"(omf::off)"
- edocker stop running
- edocker stop all
+ edocker stop mycontainer
 "
 
         case "clean"
@@ -64,6 +62,17 @@ Clean containers not used
 "(omf::dim)"Examples:"(omf::off)"
  edocker clean week
  edocker clean month --force
+"
+        case "shutdown"
+            echo "\
+
+Stop all running containers.
+
+"(omf::dim)"Usage:"(omf::off)"
+ edocker shutdown
+
+"(omf::dim)"Examples:"(omf::off)"
+ edocker shutdown
 "
 
         case "show"
@@ -94,8 +103,9 @@ Show containers.
  "(omf::em)"i"(omf::off)"nspect   Return low-level information on a container.
  "(omf::em)"r"(omf::off)"emove    Remove one or more containers.
  "(omf::em)"l"(omf::off)"ogs      Fetch the logs of a container.
- "(omf::em)"stop"(omf::off)"      Stop one or more containers.
+ "(omf::em)"stop"(omf::off)"      Stop containers by name.
  "(omf::em)"clean"(omf::off)"     Clean containers not used.
+ "(omf::em)"shutdown"(omf::off)"  Stop all running containers.
  "(omf::em)"show"(omf::off)"      Shows containers.
  "(omf::em)"help"(omf::off)"      Shows help about a specific action.
 
