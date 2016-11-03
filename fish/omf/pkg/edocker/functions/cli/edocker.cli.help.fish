@@ -1,6 +1,20 @@
 function edocker.cli.help -a command
 
     switch "$command"
+
+        case "n" "new"
+            echo "\
+
+Create new container
+
+"(omf::dim)"Usage:"(omf::off)"
+ edocker new "(omf::em)"<backend> <container>"(omf::off)"
+
+"(omf::dim)"Examples:"(omf::off)"
+ edocker new mysql mycontainer
+ edocker new postgree mycontainer
+"
+
         case "i" "inspect"
             echo "\
 
@@ -37,6 +51,18 @@ Fetch the logs of a container
 
 "(omf::dim)"Examples:"(omf::off)"
  edocker logs mycontainer
+"
+
+        case "start"
+            echo "\
+
+Start container by name.
+
+"(omf::dim)"Usage:"(omf::off)"
+ edocker start "(omf::em)"<container>"(omf::off)" Start container.
+
+"(omf::dim)"Examples:"(omf::off)"
+ edocker start mycontainer
 "
 
         case "stop"
@@ -92,18 +118,22 @@ Show containers.
 \$ edocker [command] [arguments]
 
 "(omf::dim)"Usage:"(omf::off)"
- edocker "(omf::em)"inspect"(omf::off)" <container> [--format]
- edocker "(omf::em)"remove"(omf::off)"  <container> [--force]
- edocker "(omf::em)"logs"(omf::off)"    <container>
- edocker "(omf::em)"stop"(omf::off)"    (running | all)
- edocker "(omf::em)"clean"(omf::off)"   (minute | hour | day | week | month | year) [--force]
+ edocker "(omf::em)"new"(omf::off)"      <backend> <container>
+ edocker "(omf::em)"inspect"(omf::off)"  <container> [--format]
+ edocker "(omf::em)"remove"(omf::off)"   <container> [--force]
+ edocker "(omf::em)"logs"(omf::off)"     <container>
+ edocker "(omf::em)"start"(omf::off)"    <container>
+ edocker "(omf::em)"stop"(omf::off)"     (running | all)
+ edocker "(omf::em)"clean"(omf::off)"    (minute | hour | day | week | month | year) [--force]
  edocker "(omf::em)"shutdown"(omf::off)"
  edocker "(omf::em)"show"(omf::off)"
 
  "(omf::dim)"Commands:"(omf::off)"
+ "(omf::em)"n"(omf::off)"ew       Create new container based on specific backend.
  "(omf::em)"i"(omf::off)"nspect   Return low-level information on a container.
  "(omf::em)"r"(omf::off)"emove    Remove one or more containers.
  "(omf::em)"l"(omf::off)"ogs      Fetch the logs of a container.
+ "(omf::em)"start"(omf::off)"     Start container by name.
  "(omf::em)"stop"(omf::off)"      Stop containers by name.
  "(omf::em)"clean"(omf::off)"     Clean containers not used.
  "(omf::em)"shutdown"(omf::off)"  Stop all running containers.

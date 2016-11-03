@@ -19,6 +19,9 @@ function edocker -d "Extended docker"
         case "-h*" "--h*" "help"
             edocker.cli.help $arguments
 
+        case "n" "new"
+            edocker.cli.new $arguments
+
         case "i" "inspect"
             edocker.cli.inspect $arguments
 
@@ -27,6 +30,9 @@ function edocker -d "Extended docker"
 
         case "l" "logs"
             edocker.cli.logs $arguments
+
+        case "start"
+            edocker.cli.start $arguments
 
         case "stop"
             edocker.cli.stop $arguments
