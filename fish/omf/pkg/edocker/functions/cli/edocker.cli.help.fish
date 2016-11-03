@@ -97,6 +97,7 @@ Show containers.
  edocker "(omf::em)"logs"(omf::off)"    <container>
  edocker "(omf::em)"stop"(omf::off)"    (running | all)
  edocker "(omf::em)"clean"(omf::off)"   (minute | hour | day | week | month | year) [--force]
+ edocker "(omf::em)"shutdown"(omf::off)"
  edocker "(omf::em)"show"(omf::off)"
 
  "(omf::dim)"Commands:"(omf::off)"
