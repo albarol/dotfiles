@@ -14,6 +14,6 @@ Usage: runcsv "(omf::em)"<csvfile> <command>"(omf::off)
         echo (omf::err)"File $argv[1] not found."(omf::off)
         return $OMF_INVALID_ARG
     else
-        cat $filename | tr ',' ' ' | xargs -l bash -c $command
+        cat $filename |sed 1d | tr ',' ' ' | xargs -l bash -c $command
     end
 end
