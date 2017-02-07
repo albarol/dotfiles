@@ -13,8 +13,9 @@ fi
 
 echo "Installing vim profile"
 
+mkdir ~/.vim
+cp -Rpd .vim/* ~/.vim/
 cp .vimrc ~/.vimrc
-cp -Rpd .vim/ ~/.vim
 
 echo "Installing vim plugins"
 vim +PluginInstall +qall
