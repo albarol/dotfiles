@@ -13,6 +13,7 @@ filetype off
 autocmd BufWritePre * :%s/\s\+$//e
 
 set ruler
+set cursorline
 set showmode
 set history=1000
 syntax on
@@ -47,4 +48,4 @@ source ~/.vim/maps.vim
 """""""""""""
 " => Scheme "
 """""""""""""
-source ~/.vim/colors.vim
+colorscheme apprentice
