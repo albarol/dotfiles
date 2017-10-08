@@ -203,7 +203,6 @@ process_commands() {
 
 
 if [[ "${@:-1}" = "--help" ]] && [[ "$#" -eq 1 ]]; then
-    echo "${@:-1}"
     message_help && exit 0
 elif [[ "$#" -ge 1 ]]; then
     process_commands $@

@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+URL=https://www.gitignore.io/api
+
+if [[ "$#" -eq 0 ]]; then
+    printf "\
+\$ gi <language>
+
+\e[1mUsage:\e[0m
+ gi <programming language>
+ gi --list
+
+\e[1mExamples:\e[0m
+ gi python
+ gi csharp
+ gi ruby
+"
+
+elif [[ "$1" = "--list" ]]; then
+    curl -L -s ${URL}/list |awk -F ',' '{print $1}'
+else
+    curl -L -s ${URL}/$1
+fi
