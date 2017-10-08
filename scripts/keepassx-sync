@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+KEEPASSX_DIR=.config/keepassx
+TMP_FILENAME=/tmp/$(uuidgen).kdbx
+
+message_help() {
+    printf "\
+\$ keepassx-sync <command>
+
+\e[1mUsage:\e[0m
+ keepassx-sync remote
+ keepassx-sync local
+"
+exit 1
+}
+
+remote_sync() {
+    printf "\e[1;33mKeePassX Sync\n\
+=============\e[0m\n\nUploading file...\n"
+
+    scp $HOME/$KEEPASSX_DIR/data.kdbx fakeezz@fakeezz.com.br:/home/fakeezz/$KEEPASSX_DIR/backup/data.kdbx
+    scp fakeezz@fakeezz.com.br:/home/fakeezz/$KEEPASSX_DIR/backup/data.kdbx $TMP_FILENAME
+
+    local_checksum=$(md5sum $HOME/$KEEPASSX_DIR/data.kdbx | awk '{print $1}')
+    remote_checksum=$(md5sum $TMP_FILENAME |awk '{print $1}')
+
+    if [[ $local_checksum = $remote_checksum ]]; then
+        printf "\n\e[1;32mBackup successful\e[0m\n"
+    else
+        printf "\n\e[1;31mBackup error\e[0m\n"
+    fi
+}
+
+
+local_sync() {
+    printf "\e[1;33mKeePassX Sync\n\
+=============\e[0m\n\nDownloading file...\n"
+
+    if [[ ! -d $HOME/$KEEPASSX_DIR ]]; then
+        mkdir $HOME/$KEEPASSX_DIR
+    fi
+
+    scp fakeezz@fakeezz.com.br:/home/fakeezz/$KEEPASSX_DIR/backup/data.kdbx $TMP_FILENAME
+    mv $HOME/$KEEPASSX_DIR/data.kdbx $HOME/$KEEPASSX_DIR/data.kdbx.bkp
+    mv $TMP_FILENAME $HOME/$KEEPASSX_DIR/data.kdbx
+}
+
+
+if [[ "$#" -ne 1 ]]; then
+    message_help
+else
+    if [[ "$1" = "local" ]]; then
+        local_sync
+    elif [[ "$1" = "remote" ]]; then
+        remote_sync
+    else
+        message_help
+    fi
+fi
