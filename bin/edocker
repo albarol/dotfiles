@@ -1,0 +1,213 @@
+#!/usr/bin/env bash
+
+GREEN="\e[32m"
+RED="\e[31m"
+DIM="\e[2m"
+BOLD="\e[1m"
+NC="\e[0m"
+
+message_help() {
+printf  "\
+\$ edocker [comand] [arguments]
+
+${BOLD}Usage:${NC}
+ edocker ${GREEN}inspect${NC}  <container> [--format]
+ edocker ${GREEN}remove${NC}   <container> [--force]
+ edocker ${GREEN}logs${NC}     <container>
+ edocker ${GREEN}start${NC}    <container>
+ edocker ${GREEN}stop${NC}     (running | all)
+ edocker ${GREEN}clean${NC}    (minute | hour | day | week | month | year) [--force]
+ edocker ${GREEN}shutdown${NC}
+ edocker ${GREEN}show${NC}
+
+${BOLD}Commands:${NC}
+ ${GREEN}inspect${NC}   Return low-level information on a container.
+ ${GREEN}remove${NC}    Remove one or more containers.
+ ${GREEN}logs${NC}      Fetch the logs of a container.
+ ${GREEN}start${NC}     Start container by name.
+ ${GREEN}stop${NC}      Stop containers by name.
+ ${GREEN}clean${NC}     Clean containers not used.
+ ${GREEN}shutdown${NC}  Stop all running containers.
+ ${GREEN}show${NC}      Shows containers.
+ ${GREEN}help${NC}      Shows help about a specific action.
+
+${BOLD}Options:${NC}
+${GREEN}--h${NC}elp     Display this help.
+"
+}
+
+
+process_inspect() {
+    local cid=$(docker ps -a -q --filter "name=$1")
+
+    if [[ -z $cid ]]; then
+        printf "${RED}Usage: edocker inspect <container> [--format]${NC}\n"
+        exit 1
+    fi
+
+    if [[ "$#" -eq 2 ]]; then
+        docker inspect --format $2 $cid
+    else
+        docker inspect $cid
+    fi
+    exit 0
+}
+
+process_remove() {
+
+    if [[ "$#" -lt 1 ]]; then
+        printf "${RED}Usage: edocker remove <container> [--force]${NC}\n"
+        exit 1
+    elif [[ "$#" -gt 1 ]] && [[ "$2" != "--force" ]]; then
+        printf "${RED}Usage: edocker inspect <container> [--force]${NC}\n"
+        exit 1
+    else
+
+        local containers=$(docker ps -a -q --filter "name=$1")
+        local force=""
+
+        echo $2
+
+        if [[ $2 = '--force' ]]; then
+            force="--force "
+        fi
+
+        if [[ $(echo $containers |wc -w) -gt 0 ]]; then
+            printf "${DIM}Removing containers${NC}\n"
+            for container in "${containers[@]}"; do
+                printf "$container\n"
+                docker rm $force$container &> /dev/null
+            done
+        fi
+    fi
+}
+
+process_logs() {
+
+    if [[ "$#" -ne 1 ]]; then
+        printf "${RED}Usage: edocker logs <container>${NC}\n"
+        exit 1
+    fi
+
+    local container=$(docker ps -a -q --filter "name=$1")
+
+    if [[ $(echo $container |wc -w) -ne 1 ]]; then
+        printf "${RED}Usage: edocker logs <container>${NC}\n"
+        printf "${RED}Please, choose a unique name${NC}\n"
+        exit 1
+    fi
+
+    docker logs -f -t $container
+}
+
+process_start() {
+    if [[ "$#" -ne 1 ]]; then
+        printf "${RED}Usage: edocker start <container>${NC}\n"
+        exit 1
+    fi
+
+    local containers=$(docker ps -a -q --filter "name=$1")
+
+    if [[ $(echo $containers |wc -w) -gt 0 ]]; then
+        printf "${DIM}Starting $1 containers${NC}\n"
+        for container in "${containers[@]}"; do
+            printf "$container\n"
+            docker start $container 1> /dev/null
+        done
+    fi
+    exit 0
+}
+
+process_stop() {
+    if [[ "$#" -ne 1 ]]; then
+        printf "${RED}Usage: edocker stop <container>${NC}\n"
+        exit 1
+    fi
+
+    local containers=$(docker ps -a -q --filter "name=$1")
+
+    if [[ $(echo $containers |wc -w) -gt 0 ]]; then
+        printf "${DIM}Stopping $1 containers${NC}\n"
+        for container in "${containers[@]}"; do
+            printf "$container\n"
+            docker stop $container 1> /dev/null
+        done
+    fi
+    exit 0
+}
+
+
+process_clean() {
+    help_clean() {
+        printf "${RED}Usage: edocker clean (minute | hour | day | week | month | year)${NC}\n"
+        exit 1
+    }
+
+    run_clean_command() {
+        local containers=$(docker ps -a |grep $1)
+        local force=""
+
+        if [[ $(echo $containers |wc -w) -gt 1 ]]; then
+
+            if [[ $2 = '--force' ]]; then
+                force="--force "
+            fi
+
+            printf "${DIM}Cleaning containers.${NC}\n"
+
+            for container in "${containers[@]}"; do
+                local cid=$(echo $container |awk '{print $1}')
+                docker rm $force$cid
+            done
+        fi
+        exit 0
+    }
+
+    case $1 in
+        minute|hour|day|week|month|year) run_clean_command $@;;
+        *) help_clean || exit 1
+    esac
+}
+
+process_shutdown() {
+    local containers=$(docker ps -a -q --filter "status=running")
+
+    if [[ $(echo $containers |wc -w) -gt 0 ]]; then
+        printf "${DIM}Stop running containers.${NC}\n"
+        for container in "${containers[@]}"; do
+            docker stop $container
+        done
+    fi
+}
+
+process_show() {
+    docker ps -a |awk '{print $1, $NF}' |column -t
+}
+
+process_commands() {
+    local cmd=$1
+    shift
+
+    case $cmd in
+        i|inspect) process_inspect $@;;
+        r|remove) process_remove $@;;
+        l|logs) process_logs $@;;
+        s|start) process_start $@;;
+        t|stop) process_stop $@;;
+        d|shutdown) process_shutdown;;
+        c|clean) process_clean $@;;
+        w|show) process_show;;
+        *) message_help;;
+    esac
+}
+
+
+if [[ "${@:-1}" = "--help" ]] && [[ "$#" -eq 1 ]]; then
+    echo "${@:-1}"
+    message_help && exit 0
+elif [[ "$#" -ge 1 ]]; then
+    process_commands $@
+else
+    message_help && exit 0
+fi
+
