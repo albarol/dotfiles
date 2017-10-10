@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+
+GREEN="\e[32m"
+RED="\e[31m"
+DIM="\e[2m"
+BOLD="\e[1m"
+NC="\e[0m"
+
+message_help() {
+printf  "\
+\$ egit [comand] [arguments]
+
+${BOLD}Usage:${NC}
+ egit ${GREEN}find-branch${NC} <pattern>
+ egit ${GREEN}clear${NC}
+
+${BOLD}Commands:${NC}
+ ${GREEN}f${NC}ind-${GREEN}b${NC}ranch   Return a list of branches that match with pattern.
+ ${GREEN}clear${NC}         Clear all orig files
+
+${BOLD}Options:${NC}
+${GREEN}--h${NC}elp     Display this help.
+"
+}
+
+process_find_branch() {
+    if [[ "$#" -ne 1 ]]; then
+        printf "${RED}Usage: egit find-branch <pattern>${NC}\n"
+        exit 1
+    fi
+    git branch -a|grep --color -w $1
+    exit 0
+}
+
+process_clear() {
+    find . -name '*.orig' -delete
+}
+
+process_commands() {
+    local cmd=$1
+    shift
+
+    case $cmd in
+        fb|find-branch) process_find_branch $@;;
+        clear) process_clear;;
+        *) message_help;;
+    esac
+}
+
+
+if [[ "${@:-1}" = "--help" ]] && [[ "$#" -eq 1 ]]; then
+    message_help && exit 0
+elif [[ "$#" -ge 1 ]]; then
+    process_commands $@
+else
+    message_help && exit 0
+fi
+
