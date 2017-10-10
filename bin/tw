@@ -25,7 +25,7 @@ printf  "\
 ${BOLD}Usage:${NC}
  tw ${GREEN}timer${NC}     <ID> [minutes]
  tw ${GREEN}stop${NC}
- tw ${GREEN}notebook${NC}  <UUID>
+ tw ${GREEN}notebook${NC}  (uuid | id)
  tw ${GREEN}dashboard${NC}
 
 ${BOLD}Commands:${NC}
@@ -68,11 +68,11 @@ process_timer() {
 
 process_notebook() {
     if [ "$#" -ne 1 ]; then
-        printf "${RED}Usage: tw notebook <UUID>${NC}\n"
+        printf "${RED}Usage: tw notebook (uuid | id)${NC}\n"
         exit 1
     fi
 
-    local filename=$(echo $1 |tr -d -)
+    local filename=$(task info $1 |awk '{if($1 == "UUID") print $2}'| tr -d -)
 
     vim $TASK_PATH/$filename
 }
