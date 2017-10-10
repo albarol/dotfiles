@@ -24,13 +24,15 @@ printf  "\
 
 ${BOLD}Usage:${NC}
  tw ${GREEN}timer${NC}     <ID> [minutes]
- tw ${GREEN}info${NC}      <UUID>
- tw ${GREEN}add-info${NC}  <UUID>
+ tw ${GREEN}stop${NC}
+ tw ${GREEN}notebook${NC}  <UUID>
+ tw ${GREEN}dashboard${NC}
 
 ${BOLD}Commands:${NC}
  ${GREEN}timer${NC}       Run a task for n minutes.
- ${GREEN}info${NC}        Show info about a task.
- ${GREEN}add-info${NC}    Create a note for a task.
+ ${GREEN}notebook${NC}    Return a notebook for a given.
+ ${GREEN}stop${NC}        Stop current running task.
+ ${GREEN}dashboard${NC}   Toggle dashboard.
 
 ${BOLD}Options:${NC}
 ${GREEN}--h${NC}elp     Display this help.
@@ -64,27 +66,15 @@ process_timer() {
 ) &
 }
 
-process_add_info() {
+process_notebook() {
     if [ "$#" -ne 1 ]; then
-        printf "${RED}Usage: tw info <ID>${NC}\n"
+        printf "${RED}Usage: tw notebook <UUID>${NC}\n"
         exit 1
     fi
 
-    if [[ ! -d $TASK_PATH ]]; then
-        mkdir -p $TASK_PATH
-    fi
+    local filename=$(echo $1 |tr -d -)
 
-    touch $TASK_PATH/$1
-    vim $TASK_PATH/$1
-}
-
-process_info() {
-    if [ "$#" -ne 1 ]; then
-        printf "${RED}Usage: tw info <UUID>${NC}\n"
-        exit 1
-    fi
-
-    less $TASK_PATH/$1
+    vim $TASK_PATH/$filename
 }
 
 process_stop() {
@@ -96,15 +86,40 @@ process_stop() {
     fi
 }
 
+process_dashboard() {
+    local processes=$(ps u|grep "tmux -2 attach-session -t twdashboard"|wc -l)
+
+    if [[ "$processes" = "1" ]]; then
+	# initialize a tmux session
+	tmux new-session -d -s twdashboard -n twindow
+
+	# shows burndown dashboard
+	tmux send-keys -t twdashboard:twindow.0 'task burndown.daily' C-j
+
+	# shows calendar
+	tmux split-window -h
+	tmux send-keys -t 1 'task calendar' C-j
+
+	# shows summary
+	tmux split-window -v
+	tmux send-keys -t 2 'task ghistory' C-j
+
+	# attach to current window
+	tmux -2 attach-session -t twdashboard
+    else
+	tmux kill-session -t twdashboard
+    fi
+}
+
 process_commands() {
     local cmd=$1
     shift
 
     case $cmd in
         timer) process_timer $@;;
-        add-info) process_add_info $@;;
-        info) process_info $@;;
         stop) process_stop;;
+        notebook) process_notebook $@;;
+	dashboard) process_dashboard;;
         *) message_help;;
     esac
 }
