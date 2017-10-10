@@ -20,4 +20,4 @@ export LANG=en_US.UTF-8
 export EDITOR='vim'
 
 # Path to custom scripts
-export PATH=$PATH:$HOME/.zsh/bin
+source ~/.user.zshrc
