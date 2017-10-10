@@ -14,6 +14,8 @@ ${BOLD}Usage:${NC}
  edocker ${GREEN}inspect${NC}  <container> [--format]
  edocker ${GREEN}remove${NC}   <container> [--force]
  edocker ${GREEN}logs${NC}     <container>
+ edocker ${GREEN}exec${NC}     <container> [-i|--interactive] <command>
+ edocker ${GREEN}bash${NC}     <container>
  edocker ${GREEN}start${NC}    <container>
  edocker ${GREEN}stop${NC}     (running | all)
  edocker ${GREEN}clean${NC}    (minute | hour | day | week | month | year) [--force]
@@ -24,6 +26,8 @@ ${BOLD}Commands:${NC}
  ${GREEN}inspect${NC}   Return low-level information on a container.
  ${GREEN}remove${NC}    Remove one or more containers.
  ${GREEN}logs${NC}      Fetch the logs of a container.
+ ${GREEN}exec${NC}      Execute a command inside container.
+ ${GREEN}bash${NC}      Return an interactive bash for a given container.
  ${GREEN}start${NC}     Start container by name.
  ${GREEN}stop${NC}      Stop containers by name.
  ${GREEN}clean${NC}     Clean containers not used.
@@ -98,6 +102,51 @@ process_logs() {
     fi
 
     docker logs -f -t $container
+}
+
+process_exec() {
+    if [[ "$#" -lt 2 ]]; then
+        printf "${RED}Usage: edocker exec <container> <command>${NC}\n"
+        exit 1
+    fi
+
+    local container=$(docker ps -a -q --filter "name=$1")
+    local interactive=""
+    shift
+
+    if [[ $(echo $container |wc -w) -ne 1 ]]; then
+        printf "${RED}Usage: edocker exec <container> <command>${NC}\n"
+        printf "${RED}Please, choose a unique name${NC}\n"
+        exit 1
+    fi
+
+    if [[ "$1" = "--interactive" ]] || [[ "$1" = "-i" ]]; then
+        interactive="-it"
+        shift
+    fi
+
+    docker exec $interactive $container $@
+
+    exit 0
+}
+
+process_bash() {
+    if [[ "$#" -ne 1 ]]; then
+        printf "${RED}Usage: edocker bash <container>${NC}\n"
+        exit 1
+    fi
+
+    local container=$(docker ps -a -q --filter "name=$1")
+
+    if [[ $(echo $container |wc -w) -ne 1 ]]; then
+        printf "${RED}Usage: edocker bash <container>${NC}\n"
+        printf "${RED}Please, choose a unique name${NC}\n"
+        exit 1
+    fi
+
+    docker exec -it $container bash
+
+    exit 0
 }
 
 process_start() {
@@ -192,6 +241,8 @@ process_commands() {
         i|inspect) process_inspect $@;;
         r|remove) process_remove $@;;
         l|logs) process_logs $@;;
+        e|exec) process_exec $@;;
+        b|bash) process_bash $@;;
         s|start) process_start $@;;
         t|stop) process_stop $@;;
         d|shutdown) process_shutdown;;
