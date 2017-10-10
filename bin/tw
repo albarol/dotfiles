@@ -1,0 +1,120 @@
+#!/usr/bin/env bash
+
+GREEN="\e[32m"
+RED="\e[31m"
+DIM="\e[2m"
+BOLD="\e[1m"
+NC="\e[0m"
+TASK_PATH=$HOME/.task/info
+
+
+function get_script_path() {
+    SOURCE="${BASH_SOURCE[0]}"
+    while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+        DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+        SOURCE="$(readlink "$SOURCE")"
+        [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+    done
+    echo "$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+}
+
+message_help() {
+printf  "\
+\$ tw [comand] [arguments]
+
+${BOLD}Usage:${NC}
+ tw ${GREEN}timer${NC}     <ID> [minutes]
+ tw ${GREEN}info${NC}      <UUID>
+ tw ${GREEN}add-info${NC}  <UUID>
+
+${BOLD}Commands:${NC}
+ ${GREEN}timer${NC}       Run a task for n minutes.
+ ${GREEN}info${NC}        Show info about a task.
+ ${GREEN}add-info${NC}    Create a note for a task.
+
+${BOLD}Options:${NC}
+${GREEN}--h${NC}elp     Display this help.
+"
+}
+
+process_timer() {
+    if [[ "$#" -lt 1 ]]; then
+        printf "${RED}Usage: tw timer 5 25${NC}\n"
+        exit 1
+    fi
+
+    local INTERVAL=1500
+    if [ "$#" -eq 2 ]; then
+        INTERVAL=$(expr $2 \* 60)
+    fi
+
+    task $1 start &> /dev/null
+
+    if [ $? -ne 0 ]; then
+        notify-send "Twtimer" "Task not available." --icon=dialog-error -t 1000 --urgency=critical
+        exit 1
+    fi
+
+(
+    notify-send "Twtimer" "Timer started" --icon=dialog-information -t 1000 --urgency=critical
+    sleep $INTERVAL
+    notify-send "Twtimer" "Timer stopped" --icon=dialog-information -t 1000 --urgency=critical
+    task $1 stop &> /dev/null
+    paplay $(get_script_path)/twtimer.ogg
+) &
+}
+
+process_add_info() {
+    if [ "$#" -ne 1 ]; then
+        printf "${RED}Usage: tw info <ID>${NC}\n"
+        exit 1
+    fi
+
+    if [[ ! -d $TASK_PATH ]]; then
+        mkdir -p $TASK_PATH
+    fi
+
+    touch $TASK_PATH/$1
+    vim $TASK_PATH/$1
+}
+
+process_info() {
+    if [ "$#" -ne 1 ]; then
+        printf "${RED}Usage: tw info <UUID>${NC}\n"
+        exit 1
+    fi
+
+    less $TASK_PATH/$1
+}
+
+process_stop() {
+    local current=$(task active |awk 'NR==4 {print $1}')
+
+    if [[ ! -z $current ]]; then
+        task $current stop
+        ps u |grep "tw timer $current" |awk 'NR==1 {print $2}' |xargs kill
+    fi
+}
+
+process_commands() {
+    local cmd=$1
+    shift
+
+    case $cmd in
+        timer) process_timer $@;;
+        add-info) process_add_info $@;;
+        info) process_info $@;;
+        stop) process_stop;;
+        *) message_help;;
+    esac
+}
+
+
+if [[ "${@:-1}" = "--help" ]] && [[ "$#" -eq 1 ]]; then
+    message_help && exit 0
+elif [[ "$#" -ge 1 ]]; then
+    process_commands $@
+else
+    message_help && exit 0
+fi
+
