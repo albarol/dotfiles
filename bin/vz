@@ -1,0 +1,184 @@
+#!/usr/bin/env zsh
+
+GREEN="\e[32m"
+RED="\e[31m"
+DIM="\e[2m"
+BOLD="\e[1m"
+NC="\e[0m"
+
+if [[ -z "$VIRTUALZSH_HOME" ]]; then
+    export VIRTUALZSH_HOME=$HOME/.virtualenvs
+fi
+
+
+message_help() {
+printf  "\
+\$ vz <comand> [<arguments>]
+
+${BOLD}Usage:${NC}
+ vz ${GREEN}activate${NC}        <name>
+ vz ${GREEN}addpath${NC}
+ vz ${GREEN}all${NC}
+ vz ${GREEN}cd${NC}
+ vz ${GREEN}cdpackages${NC}
+ vz ${GREEN}connect${NC}
+ vz ${GREEN}deactivate${NC}
+ vz ${GREEN}globalpackages${NC}
+ vz ${GREEN}ls${NC}
+ vz ${GREEN}new${NC}             [--two|--three] <name>
+ vz ${GREEN}rm${NC}              <name>
+ vz ${GREEN}tmp${NC}             [--two|--three]
+
+${BOLD}Available commands:${NC}
+ vz ${GREEN}activate${NC}         Activate a virtualenv
+ vz ${GREEN}addpath${NC}          Adds a path to sys.path in this virtualenv
+ vz ${GREEN}all${NC}              Run a command in all virtualenvs sequentially
+ vz ${GREEN}cd${NC}               Change directory to this virtualenv
+ vz ${GREEN}cdpackages${NC}       Change to the site-packages directory of this virtualenv
+ vz ${GREEN}connect${NC}          Connect this virtualenv to the current directory
+ vz ${GREEN}deactivate${NC}       Deactivate this virtualenv
+ vz ${GREEN}globalpackages${NC}   Toogle global site packages
+ vz ${GREEN}ls${NC}               List all of the available virtualenvs
+ vz ${GREEN}new${NC}              Create a new virtualenv
+ vz ${GREEN}rm${NC}               Delete a virtualenv
+ vz ${GREEN}tmp${NC}              Create a virtualenv that will be removed when deactivated
+
+
+${BOLD}Options:${NC}
+${GREEN}--h${NC}elp     Display this help.
+"
+}
+
+process_activate() {
+
+    if [[ $# -ne 1 ]]; then
+        printf "You need to specify a virtualenv.\n"
+        exit 1
+    fi
+
+    if [[ ! -d $VIRTUALZSH_HOME/$1 ]]; then
+        printf "The virtualenv ${1} does not exist.\n"
+        printf "You can create it with ${BOLD}vz new $1${NC}\n"
+        exit 1
+    fi
+
+    if [[ -n $VIRTUAL_ENV ]]; then
+        local CURRENT_ENV=$(basename $VIRTUAL_ENV)
+        printf "The ${BOLD}$CURRENT_ENV${NC} is currently activated.\n"
+        printf "To activate ${BOLD}$1${NC} you must deactivate ${BOLD}$CURRENT_ENV${NC}\n"
+        exit
+    fi
+
+    tmux new-session -d -s $1 -n twindow
+    tmux send-keys -t 0 "source $VIRTUALZSH_HOME/$1/bin/activate" C-j
+    tmux send-keys -t 0 "function cdvirtualenv() { cd $VIRTUALZSH_HOME/$1 }" C-j
+    tmux send-keys -t 0 "clear" C-j
+    sleep 0.5
+    tmux -2 attach-session -t $1
+}
+
+process_cd() {
+
+    if [[ -z $VIRTUAL_ENV ]]; then
+        printf "No virtualenv is activated."
+        exit
+    fi
+
+    echo "$VIRTUAL_ENV"
+}
+
+process_deactivate() {
+    if [[ -z $VIRTUAL_ENV ]]; then
+        printf "No virtualenv is activated."
+        exit
+    fi
+
+    unset cdvirtualenv
+    local CURRENT_ENV=$(basename $VIRTUAL_ENV)
+    tmux kill-session -t $CURRENT_ENV
+}
+
+process_new() {
+
+    find_python() {
+        local PY=$(command -v python$1)
+
+        if [[ -z $PY ]]; then
+            printf "${RED}Python $1 is not supported.${NC}\n"
+            exit 1
+        fi
+
+        echo $PY
+    }
+
+    if [[ -n $VIRTUAL_ENV ]]; then
+        local CURRENT_ENV=$(basename $VIRTUAL_ENV)
+        printf "The ${BOLD}$CURRENT_ENV${NC} is currently activated.\n"
+        printf "You must deactivate before create a new virtualenv\n"
+        exit
+    fi
+
+    # select python version
+    case $1 in
+        --three) PYTHON_EXE=$(find_python 3); shift;;
+        --two) PYTHON_EXE=$(find_python 2); shift;;
+        *) PYTHON_EXE=$(command -v python);;
+    esac
+
+    if [[ -d "$VIRTUALZSH_HOME/$1" ]]; then
+        printf "${RED}The $1 virtualenv already exists.${NC}\n"
+        exit 1
+    fi
+
+    virtualenv --python=$PYTHON_EXE $VIRTUALZSH_HOME/$1
+}
+
+process_rm() {
+
+    local CURRENT_ENV=$(basename $VIRTUAL_ENV"")
+
+    if [[ $CURRENT_ENV = "$1" ]]; then
+        printf "The ${BOLD}$1${NC} is currently activated.\n"
+        printf "You must deactivate before remove the virtualenv\n"
+        exit
+    fi
+
+    if [[ ! -d "$VIRTUALZSH_HOME/$1" ]]; then
+        printf "${RED}The $1 virtualenv does not exist.${NC}\n"
+        exit 1
+    fi
+
+    printf "Removing $VIRTUALZSH_HOME/$1"
+    rm -rf $VIRTUALZSH_HOME/$1
+}
+
+process_commands() {
+    local cmd=$1
+    shift
+
+    case $cmd in
+        activate) process_activate $@;;
+        addpath) message_help;;
+        all) message_help;;
+        cd) process_cd;;
+        cdpackages) message_help;;
+        connect) message_help;;
+        deactivate) process_deactivate;;
+        globalpackages) message_help;;
+        ls) message_help;;
+        new) process_new $@;;
+        rm) process_rm $@;;
+        tmp) message_help;;
+        *) message_help;;
+    esac
+}
+
+
+if [[ "${@:-1}" = "--help" ]] && [[ "$#" -eq 1 ]]; then
+    message_help && exit 0
+elif [[ "$#" -ge 1 ]]; then
+    process_commands $@
+else
+    message_help && exit 0
+fi
+
