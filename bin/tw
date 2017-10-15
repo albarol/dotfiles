@@ -5,7 +5,8 @@ RED="\e[31m"
 DIM="\e[2m"
 BOLD="\e[1m"
 NC="\e[0m"
-TASK_PATH=$HOME/.task/info
+
+TASK_PATH=$HOME/.task
 
 
 function get_script_path() {
@@ -27,12 +28,14 @@ ${BOLD}Usage:${NC}
  tw ${GREEN}stop${NC}
  tw ${GREEN}notebook${NC}  (uuid | id)
  tw ${GREEN}dashboard${NC}
+ tw ${GREEN}sync${NC}
 
 ${BOLD}Commands:${NC}
  ${GREEN}timer${NC}       Run a task for n minutes.
  ${GREEN}notebook${NC}    Return a notebook for a given.
  ${GREEN}stop${NC}        Stop current running task.
  ${GREEN}dashboard${NC}   Toggle dashboard.
+ ${GREEN}sync${NC}        Sync all tasks.
 
 ${BOLD}Options:${NC}
 ${GREEN}--h${NC}elp     Display this help.
@@ -74,7 +77,7 @@ process_notebook() {
 
     local filename=$(task info $1 |awk '{if($1 == "UUID") print $2}'| tr -d -)
 
-    vim $TASK_PATH/$filename
+    vim $TASK_PATH/info/$filename
 }
 
 process_stop() {
@@ -111,6 +114,25 @@ process_dashboard() {
     fi
 }
 
+process_sync() {
+    cd $TASK_PATH
+
+    local SYNCED_MESSAGE="[Sync] Tasks synced at $(date '+%Y-%m-%d %H:%M')"
+    local MSG_COMMIT="$SYNCED_MESSAGE"
+
+    if [[ -n "$1" ]]; then
+        MSG_COMMIT=$1
+    fi
+
+    if [[ -n $(git status --porcelain) ]]; then
+        git add --all
+        git commit -m "$MSG_COMMIT" &> /dev/null
+    fi
+    git pull origin master &> /dev/null
+    git push origin master &> /dev/null
+    echo $SYNCED_MESSAGE
+}
+
 process_commands() {
     local cmd=$1
     shift
@@ -120,6 +142,7 @@ process_commands() {
         stop) process_stop;;
         notebook) process_notebook $@;;
 	dashboard) process_dashboard;;
+        sync) process_sync $@;;
         *) message_help;;
     esac
 }
