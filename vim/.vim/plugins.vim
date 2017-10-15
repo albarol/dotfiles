@@ -45,24 +45,16 @@ if !exists('g:airline_symbols')
     let g:airline_symbols = {}
 endif
 
-
-" Filesystem
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.pyo,*.pyd
-let g:ctrlp_custom_ignore = { 'dir': '\v[\/]\.(git|hg|svn)$', }
+" CVS
 let g:gitgutter_realtime = 0
 let g:gitgutter_eager = 0
 
-" Python IDE
+" Filesystem
+let g:ctrlp_custom_ignore = { 'dir': '\v[\/]\.(git|hg|svn)$', }
+
+" IDE
 let g:tagbar_autofocus = 1
 let g:tagbar_autoclose = 1
-
-set nofoldenable
-let g:pymode_lint_on_write = 0
-let g:pymode_options_max_line_length = 119
-let g:pymode_rope_goto_definition_cmd = 'tabnew'
-let g:pymode_rope = 1
-let g:pymode_rope_completion = 0
-let g:pymode_rope_lookup_project = 0
 
 " identLine
 let g:indentLine_color_term = 238
