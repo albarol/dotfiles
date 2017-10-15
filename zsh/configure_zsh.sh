@@ -39,6 +39,15 @@ configure_zsh() {
     ln -s $DIR/../bin $HOME/.zsh/bin
 }
 
+install_plugins() {
+    if [[ -d $HOME/.oh-my-zsh ]]; then
+        cd $HOME/.oh-my.zsh/custom/plugins
+        git clone git@github.com:fakeezz/history-search-multi-word.git
+        git clone git@github.com:fakeezz/zsh-autosuggestions.git
+        git clone git@github.com:fakeezz/zsh-interactive-cd.git
+    fi
+}
+
 install_zsh
 install_oh_my_zsh
 configure_zsh
