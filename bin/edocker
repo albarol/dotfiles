@@ -60,21 +60,20 @@ process_inspect() {
 process_remove() {
 
     if [[ "$#" -lt 1 ]]; then
-        printf "${RED}Usage: edocker remove <container> [--force]${NC}\n"
+        printf "${RED}Usage: edocker remove [--force] <container>${NC}\n"
         exit 1
-    elif [[ "$#" -gt 1 ]] && [[ "$2" != "--force" ]]; then
-        printf "${RED}Usage: edocker inspect <container> [--force]${NC}\n"
+    elif [[ "$#" -gt 1 ]] && [[ "$1" != "--force" ]]; then
+        printf "${RED}Usage: edocker remove [--force] <container>${NC}\n"
         exit 1
     else
 
-        local containers=$(docker ps -a -q --filter "name=$1")
         local force=""
-
-        echo $2
-
-        if [[ $2 = '--force' ]]; then
+        if [[ $1 = '--force' ]]; then
             force="--force "
+            shift
         fi
+
+        local containers=$(docker ps -a -q --filter "name=$1")
 
         if [[ $(echo $containers |wc -w) -gt 0 ]]; then
             printf "${DIM}Removing containers${NC}\n"
@@ -116,7 +115,7 @@ process_exec() {
 
     if [[ $(echo $container |wc -w) -ne 1 ]]; then
         printf "${RED}Usage: edocker exec <container> <command>${NC}\n"
-        printf "${RED}Please, choose a unique name${NC}\n"
+        printf "${RED}Please, choose an unique name${NC}\n"
         exit 1
     fi
 
@@ -140,7 +139,7 @@ process_bash() {
 
     if [[ $(echo $container |wc -w) -ne 1 ]]; then
         printf "${RED}Usage: edocker bash <container>${NC}\n"
-        printf "${RED}Please, choose a unique name${NC}\n"
+        printf "${RED}Please, choose an unique name${NC}\n"
         exit 1
     fi
 
