@@ -28,11 +28,13 @@ ${BOLD}Usage:${NC}
  tw ${GREEN}stop${NC}
  tw ${GREEN}notebook${NC}  (uuid | id)
  tw ${GREEN}dashboard${NC}
+ tw ${GREEN}backlog${NC}
  tw ${GREEN}sync${NC}
 
 ${BOLD}Commands:${NC}
  ${GREEN}timer${NC}       Run a task for n minutes.
  ${GREEN}notebook${NC}    Return a notebook for a given.
+ ${GREEN}backlog${NC}     Return the backlog of tasks.
  ${GREEN}stop${NC}        Stop current running task.
  ${GREEN}dashboard${NC}   Toggle dashboard.
  ${GREEN}sync${NC}        Sync all tasks.
@@ -78,6 +80,10 @@ process_notebook() {
     local filename=$(task info $1 |awk '{if($1 == "UUID") print $2}'| tr -d -)
 
     vim $TASK_PATH/info/$filename
+}
+
+process_backlog() {
+    vim $TASK_PATH/product.backlog
 }
 
 process_stop() {
@@ -141,6 +147,7 @@ process_commands() {
         timer) process_timer $@;;
         stop) process_stop;;
         notebook) process_notebook $@;;
+        backlog) process_backlog;;
 	dashboard) process_dashboard;;
         sync) process_sync $@;;
         *) message_help;;
