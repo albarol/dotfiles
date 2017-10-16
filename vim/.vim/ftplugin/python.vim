@@ -10,3 +10,4 @@ let g:pymode_rope_goto_definition_cmd = 'tabnew'
 let g:pymode_rope = 1
 let g:pymode_rope_completion = 0
 let g:pymode_rope_lookup_project = 0
+let g:pymode_rope_regenerate_on_write = 0

@@ -1,3 +1,4 @@
 
 # Skip undesired paths
 bundle/
+.vim/session
