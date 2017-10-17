@@ -34,3 +34,5 @@ function DoPrettyJson()
   silent %!python -m json.tool
 endfunction
 command! PrettyJson call DoPrettyJson()
+
+command! -nargs=0 RemoveTab execute "%s/\t/    /gi" <Bar> cw
