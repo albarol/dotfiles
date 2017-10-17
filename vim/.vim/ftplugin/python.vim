@@ -1,7 +1,8 @@
 " Filesystem
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.pyo,*.pyd
 let NERDTreeIgnore = ['\.pyc$', '\.pyo$', '\.pyd$']
-
+let g:ctrlp_custom_ignore = 'pyc|pyo|pyd'
+"
 " Python IDE
 set nofoldenable
 let g:pymode_lint_on_write = 0
