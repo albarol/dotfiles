@@ -21,3 +21,31 @@ export EDITOR='vim'
 
 # Path to custom scripts
 source ~/.user.zshrc
+
+
+# Jump command alias
+jp() {
+    goto() {
+        local MARK=$(jump _get $1)
+
+        if [[ -z "$MARK" ]]; then
+            printf "There is no mark \e[1m$1\e[0m\n";
+            return
+        fi
+
+        cd $MARK
+    }
+
+    local cmd=$1
+    shift
+
+    case $cmd in
+        mark) jump mark $@;;
+        unmark) jump unmark $@;;
+        _get) jump _get $@;;
+        marks) jump marks;;
+        clear) jump clear;;
+        --help) jump --help;;
+        *) goto $cmd;;
+    esac
+}
