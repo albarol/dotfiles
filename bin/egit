@@ -11,24 +11,31 @@ printf  "\
 \$ egit [comand] [arguments]
 
 ${BOLD}Usage:${NC}
- egit ${GREEN}find-branch${NC} <pattern>
+ egit ${GREEN}bs${NC}       [--allow-remote | -r] <pattern>
  egit ${GREEN}clear${NC}
 
 ${BOLD}Commands:${NC}
- ${GREEN}f${NC}ind-${GREEN}b${NC}ranch   Return a list of branches that match with pattern.
- ${GREEN}clear${NC}         Clear all orig files
+ ${GREEN}bs${NC}            Searching for patterns on remote/local branches.
+ ${GREEN}clear${NC}         Clear all orig files.
 
 ${BOLD}Options:${NC}
 ${GREEN}--h${NC}elp     Display this help.
 "
 }
 
-process_find_branch() {
-    if [[ "$#" -ne 1 ]]; then
-        printf "${RED}Usage: egit find-branch <pattern>${NC}\n"
+process_branch_search() {
+    if [[ "$#" -lt 1 ]]; then
+        printf "${RED}Usage: egit bs [--allow-remote | -r] <pattern>${NC}\n"
         exit 1
     fi
-    git branch -a|grep --color -w $1
+
+    local ALLOW_REMOTE=""
+    if [[ "$1" = "--allow-remote" ]] || [[ "$1" = "-r" ]]; then
+        shift
+        ALLOW_REMOTE="-a"
+    fi
+
+    git branch $ALLOW_REMOTE|grep --color -w $1
     exit 0
 }
 
@@ -41,7 +48,7 @@ process_commands() {
     shift
 
     case $cmd in
-        fb|find-branch) process_find_branch $@;;
+        bs) process_branch_search $@;;
         clear) process_clear;;
         *) message_help;;
     esac
