@@ -36,6 +36,11 @@ jp() {
         cd $MARK
     }
 
+    if [[ $# -eq 0 ]]; then
+        jump --help
+        return
+    fi
+
     local cmd=$1
     shift
 
