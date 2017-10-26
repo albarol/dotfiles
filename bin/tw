@@ -79,7 +79,7 @@ process_notebook() {
 
     local filename=$(task info $1 |awk '{if($1 == "UUID") print $2}'| tr -d -)
 
-    vim $TASK_PATH/info/$filename
+    vim $TASK_PATH/info/$filename.md
 }
 
 process_backlog() {
@@ -150,7 +150,8 @@ process_commands() {
         backlog) process_backlog;;
 	dashboard) process_dashboard;;
         sync) process_sync $@;;
-        *) message_help;;
+        --help|help) message_help;;
+        *) task $cmd $@;;
     esac
 }
 
