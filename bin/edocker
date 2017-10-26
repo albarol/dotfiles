@@ -17,10 +17,10 @@ ${BOLD}Usage:${NC}
  edocker ${GREEN}exec${NC}     <container> [-i|--interactive] <command>
  edocker ${GREEN}bash${NC}     <container>
  edocker ${GREEN}start${NC}    <container>
- edocker ${GREEN}stop${NC}     (running | all)
+ edocker ${GREEN}stop${NC}     <container>
  edocker ${GREEN}clean${NC}    (minute | hour | day | week | month | year) [--force]
+ edocker ${GREEN}show${NC}     (running | all | stopped)
  edocker ${GREEN}shutdown${NC}
- edocker ${GREEN}show${NC}
 
 ${BOLD}Commands:${NC}
  ${GREEN}inspect${NC}   Return low-level information on a container.
@@ -33,7 +33,6 @@ ${BOLD}Commands:${NC}
  ${GREEN}clean${NC}     Clean containers not used.
  ${GREEN}shutdown${NC}  Stop all running containers.
  ${GREEN}show${NC}      Shows containers.
- ${GREEN}help${NC}      Shows help about a specific action.
 
 ${BOLD}Options:${NC}
 ${GREEN}--h${NC}elp     Display this help.
@@ -229,7 +228,11 @@ process_shutdown() {
 }
 
 process_show() {
-    docker ps -a |awk '{print $1, $NF}' |column -t
+    if [[ $1 = "--running" ]]; then
+        docker ps |awk '{print $1, $NF}' |column -t
+    else
+        docker ps -a |awk '{print $1, $NF}' |column -t
+    fi
 }
 
 process_commands() {
@@ -245,8 +248,8 @@ process_commands() {
         s|start) process_start $@;;
         t|stop) process_stop $@;;
         d|shutdown) process_shutdown;;
+        w|show) process_show $@;;
         c|clean) process_clean $@;;
-        w|show) process_show;;
         *) message_help;;
     esac
 }
