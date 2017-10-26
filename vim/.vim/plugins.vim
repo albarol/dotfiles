@@ -18,12 +18,15 @@ Plugin 'kien/ctrlp.vim.git'
 Plugin 'scrooloose/nerdtree.git'
 
 " IDE
-Plugin 'klen/python-mode.git'
 Plugin 'tomtom/tlib_vim'
 Plugin 'mhinz/vim-startify'
 Plugin 'troydm/zoomwintab.vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'tpope/vim-dispatch'
+
+" Languages
+Plugin 'klen/python-mode.git'
+Plugin 'elzr/vim-json'
 
 " Editor
 Plugin 'tpope/vim-surround'

@@ -4,7 +4,7 @@
 """"""""""""""
 set sh=/bin/bash
 set t_Co=256
-set number
+set number relativenumber
 set ls=2
 set title
 set nocompatible
