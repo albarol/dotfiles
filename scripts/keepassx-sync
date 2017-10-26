@@ -18,8 +18,8 @@ remote_sync() {
     printf "\e[1;33mKeePassX Sync\n\
 =============\e[0m\n\nUploading file...\n"
 
-    scp $HOME/$KEEPASSX_DIR/data.kdbx fakeezz@fakeezz.com.br:/home/fakeezz/$KEEPASSX_DIR/backup/data.kdbx
-    scp fakeezz@fakeezz.com.br:/home/fakeezz/$KEEPASSX_DIR/backup/data.kdbx $TMP_FILENAME
+    scp $HOME/$KEEPASSX_DIR/data.kdbx fakeezz@fakeezz.com.br:/home/fakeezz/.backups/data.kdbx
+    scp fakeezz@fakeezz.com.br:/home/fakeezz/.backups/data.kdbx $TMP_FILENAME
 
     local_checksum=$(md5sum $HOME/$KEEPASSX_DIR/data.kdbx | awk '{print $1}')
     remote_checksum=$(md5sum $TMP_FILENAME |awk '{print $1}')
@@ -40,7 +40,7 @@ local_sync() {
         mkdir $HOME/$KEEPASSX_DIR
     fi
 
-    scp fakeezz@fakeezz.com.br:/home/fakeezz/$KEEPASSX_DIR/backup/data.kdbx $TMP_FILENAME
+    scp fakeezz@fakeezz.com.br:/home/fakeezz/.backups/data.kdbx $TMP_FILENAME
     mv $HOME/$KEEPASSX_DIR/data.kdbx $HOME/$KEEPASSX_DIR/data.kdbx.bkp
     mv $TMP_FILENAME $HOME/$KEEPASSX_DIR/data.kdbx
 }
