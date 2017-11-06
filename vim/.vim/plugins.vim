@@ -23,6 +23,7 @@ Plugin 'mhinz/vim-startify'
 Plugin 'troydm/zoomwintab.vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'tpope/vim-dispatch'
+Plugin 'gcmt/taboo.vim'
 
 " Languages
 Plugin 'klen/python-mode.git'
