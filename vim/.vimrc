@@ -8,6 +8,7 @@ set number relativenumber
 set ls=2
 set title
 set nocompatible
+language en_US.utf8
 filetype off
 
 autocmd BufWritePre * :%s/\s\+$//e

@@ -24,6 +24,9 @@ Plugin 'troydm/zoomwintab.vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'tpope/vim-dispatch'
 Plugin 'gcmt/taboo.vim'
+Plugin 'szw/vim-tags'
+Plugin 'gabesoft/vim-ags'
+Plugin 'tacahiroy/ctrlp-funky'
 
 " Languages
 Plugin 'klen/python-mode.git'
@@ -59,6 +62,7 @@ let g:ctrlp_custom_ignore = { 'dir': '\v[\/]\.(git|hg|svn)$', }
 " IDE
 let g:tagbar_autofocus = 1
 let g:tagbar_autoclose = 1
-
+let g:vim_tags_use_vim_dispatch = 1
+"
 " identLine
 let g:indentLine_color_term = 238
