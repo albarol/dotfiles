@@ -63,6 +63,7 @@ let g:ctrlp_custom_ignore = { 'dir': '\v[\/]\.(git|hg|svn)$', }
 let g:tagbar_autofocus = 1
 let g:tagbar_autoclose = 1
 let g:vim_tags_use_vim_dispatch = 1
-"
+let g:ags_enable_async = 1
+
 " identLine
 let g:indentLine_color_term = 238

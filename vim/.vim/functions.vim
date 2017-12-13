@@ -1,5 +1,8 @@
 
-" Pretty XML
+" Prettify XML
+" ------------
+"
+" This function gets any xml to apply a prettyfication
 function! DoPrettyXML()
   " save the filetype so we can restore it later
   let l:origft = &ft
@@ -29,10 +32,38 @@ function! DoPrettyXML()
 endfunction
 command! PrettyXml call DoPrettyXML()
 
-
+" Prettify Json
+" ------------
+"
+" This function gets any json to apply a prettyfication
 function DoPrettyJson()
   silent %!python -m json.tool
 endfunction
 command! PrettyJson call DoPrettyJson()
 
+" RemoveTab
+" ------------
+"
+" This function replaces all tabs to spaces
 command! -nargs=0 RemoveTab execute "%s/\t/    /gi" <Bar> cw
+
+
+" ModuleToClipboard
+" -----------------
+"
+" This function copies the complete module path to clipboard
+function! ModuleToClipboard()
+    let l:word=expand("<cword>")
+
+    if l:word != ""
+        let l:package=expand("%:r")
+    else
+        let l:word=expand("%:t:r")
+        let l:package=expand("%:h:r")
+    endif
+
+    let l:path = "from " . l:package . " import " . l:word
+
+    let l:path=substitute(l:path, "/", ".", "g")
+    let @+=l:path
+endfunction
