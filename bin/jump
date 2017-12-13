@@ -82,8 +82,8 @@ process_unmark() {
 
     local TMP=/tmp/$(uuidgen).tmp
 
-    grep -v "$1=" > $TMP
-    mv -f $TMP > $MARK_PATH
+    grep -v "$1=" $MARK_PATH > $TMP
+    mv $TMP $MARK_PATH
 
     exit 0
 }
