@@ -8,8 +8,8 @@ message_help() {
 \$ keepassx-sync <command>
 
 \e[1mUsage:\e[0m
- keepassx-sync remote
- keepassx-sync local
+ keepassx-sync remote   Upload dbx file
+ keepassx-sync local    Dowload dbx file
 "
 exit 1
 }
