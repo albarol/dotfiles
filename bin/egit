@@ -2,6 +2,7 @@
 
 GREEN="\e[32m"
 RED="\e[31m"
+BLUE="\e[94;1m"
 DIM="\e[2m"
 BOLD="\e[1m"
 NC="\e[0m"
@@ -13,10 +14,12 @@ printf  "\
 ${BOLD}Usage:${NC}
  egit ${GREEN}bs${NC}       [--allow-remote | -r] <pattern>
  egit ${GREEN}clear${NC}
+ egit ${GREEN}icheckout${NC}
 
 ${BOLD}Commands:${NC}
  ${GREEN}bs${NC}            Searching for patterns on remote/local branches.
  ${GREEN}clear${NC}         Clear all orig files.
+ ${GREEN}icheckout${NC}     Interactively choose which file to be restored
 
 ${BOLD}Options:${NC}
 ${GREEN}--h${NC}elp     Display this help.
@@ -43,6 +46,23 @@ process_clear() {
     find . -name '*.orig' -delete
 }
 
+process_icheckout() {
+    local FILES=$(git status -s| awk '{print $2}')
+
+    for file in ${FILES}; do
+        printf "${BOLD}$file${NC}\n"
+        printf "${BLUE}Checkout this file [y, n, q]?${NC} "
+        read checkout
+        printf "\n"
+        case $checkout in
+            y) git checkout $file;;
+            n) continue;;
+            q) break;;
+            *) continue;;
+        esac
+    done
+}
+
 process_commands() {
     local cmd=$1
     shift
@@ -50,6 +70,7 @@ process_commands() {
     case $cmd in
         bs) process_branch_search $@;;
         clear) process_clear;;
+        icheckout) process_icheckout;;
         *) message_help;;
     esac
 }
