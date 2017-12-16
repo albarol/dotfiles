@@ -8,8 +8,8 @@ message_help() {
 \$ keepassx-sync <command>
 
 \e[1mUsage:\e[0m
- keepassx-sync remote   Upload dbx file
- keepassx-sync local    Dowload dbx file
+ keepassx-sync upload
+ keepassx-sync download
 "
 exit 1
 }
@@ -49,9 +49,9 @@ local_sync() {
 if [[ "$#" -ne 1 ]]; then
     message_help
 else
-    if [[ "$1" = "local" ]]; then
+    if [[ "$1" = "download" ]]; then
         local_sync
-    elif [[ "$1" = "remote" ]]; then
+    elif [[ "$1" = "upload" ]]; then
         remote_sync
     else
         message_help
