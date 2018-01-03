@@ -6,6 +6,11 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
+" Misc
+Plugin 'tpope/vim-dispatch'
+Plugin 'gabesoft/vim-ags'
+Plugin 'mhinz/vim-startify'
+
 " CVS (Content Version Control)
 Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-fugitive'
@@ -19,18 +24,16 @@ Plugin 'scrooloose/nerdtree.git'
 
 " IDE
 Plugin 'tomtom/tlib_vim'
-Plugin 'mhinz/vim-startify'
 Plugin 'troydm/zoomwintab.vim'
 Plugin 'majutsushi/tagbar'
-Plugin 'tpope/vim-dispatch'
 Plugin 'gcmt/taboo.vim'
-Plugin 'szw/vim-tags'
-Plugin 'gabesoft/vim-ags'
 Plugin 'tacahiroy/ctrlp-funky'
+Plugin 'vim-syntastic/syntastic'
 
 " Languages
 Plugin 'klen/python-mode.git'
 Plugin 'elzr/vim-json'
+Plugin 'pangloss/vim-javascript'
 
 " Editor
 Plugin 'tpope/vim-surround'
@@ -62,8 +65,15 @@ let g:ctrlp_custom_ignore = { 'dir': '\v[\/]\.(git|hg|svn)$', }
 " IDE
 let g:tagbar_autofocus = 1
 let g:tagbar_autoclose = 1
-let g:vim_tags_use_vim_dispatch = 1
 let g:ags_enable_async = 1
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 0
 
 " identLine
 let g:indentLine_color_term = 238

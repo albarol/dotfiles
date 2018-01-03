@@ -36,7 +36,7 @@ command! PrettyXml call DoPrettyXML()
 " ------------
 "
 " This function gets any json to apply a prettyfication
-function DoPrettyJson()
+function! DoPrettyJson()
   silent %!python -m json.tool
 endfunction
 command! PrettyJson call DoPrettyJson()
