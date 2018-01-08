@@ -14,6 +14,7 @@ plugins=(
     compleat
     z
     history-search-multi-word
+    desk
     zsh-autosuggestions
     zsh-syntax-highlighting
 )
