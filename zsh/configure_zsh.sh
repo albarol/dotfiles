@@ -46,13 +46,29 @@ configure_zsh() {
 }
 
 install_plugins() {
+    local BIN_PATH=$HOME/.zsh/bin
+
     if [[ -d $HOME/.oh-my-zsh ]]; then
         cd $HOME/.oh-my.zsh/custom/plugins
         git clone git@github.com:fakeezz/history-search-multi-word.git
         git clone git@github.com:fakeezz/zsh-autosuggestions.git
-        git clone git@github.com:fakeezz/zsh-autosuggestions.git
         git clone git@github.com:fakeezz/zsh-interactive-cd.git
         git clone git@github.com:zsh-users/zsh-syntax-highlighting
+
+        # Installing desk
+        local DESK_PATH=$BIN_PATH/desk
+        if [[ ! -e $DESK_PATH ]]; then
+            curl https://raw.githubusercontent.com/jamesob/desk/master/desk > $DESK_PATH
+            chmod +x $DESK_PATH
+            git clone git@github.com:jamesob/desk.git /tmp/desk && cp -r /tmp/desk/shell_plugins/zsh desk
+        fi
+
+        # Installing zfz
+        local FZF_PATH=$BIN_PATH/zfz
+        if [[ ! -e $FZF_PATH ]]; then
+            curl -L https://github.com/junegunn/fzf-bin/releases/download/0.17.3/fzf-0.17.3-linux_amd64.tgz | tar -xvz; mv fzf $FZF_PATH
+            chmod +x $FZF_PATH
+        fi
     fi
 }
 

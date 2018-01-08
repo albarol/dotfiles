@@ -1,2 +1,4 @@
 
 zsh/.zshrc.user
+bin/fzf
+bin/desk
