@@ -20,7 +20,7 @@ fls() {
 fag() {
     local FILE="$(ag --nobreak --noheading $@ | fzf -0 -1 --color=16 --preview '')"
     local NAME="$(echo $FILE | awk -F':' '{print $1}')"
-    local POSITION="$(printf -e $FILE | awk -F':' '{print $2}')"
+    local POSITION="$(echo $FILE | awk -F':' '{print $2}')"
 
     if [[ -n $FILE ]]
     then
