@@ -28,10 +28,16 @@ configure_zsh() {
     echo "Configuring ZSH"
 
     # Replace default config file
-    if [[ -e $HOME/.zshrc ]]; then
-        rm $HOME/.zshrc
-    fi
-    ln -s $DIR/.zshrc $HOME/.zshrc
+    declare -a arr=(".zshrc" ".zshrc.user" ".zshrc.aliases")
+
+    ## now loop through the above array
+    for i in "${arr[@]}"
+    do
+        if [[ -e $HOME/$i ]]; then
+            rm $HOME/$i
+        fi
+        ln -s $DIR/$i $HOME/$i
+    done
 
     if [[ ! -d $HOME/.zsh ]]; then
         mkdir $HOME/.zsh
@@ -44,7 +50,9 @@ install_plugins() {
         cd $HOME/.oh-my.zsh/custom/plugins
         git clone git@github.com:fakeezz/history-search-multi-word.git
         git clone git@github.com:fakeezz/zsh-autosuggestions.git
+        git clone git@github.com:fakeezz/zsh-autosuggestions.git
         git clone git@github.com:fakeezz/zsh-interactive-cd.git
+        git clone git@github.com:zsh-users/zsh-syntax-highlighting
     fi
 }
 

@@ -1,0 +1,3 @@
+# User configuration
+export PATH=$PATH:$HOME/.zsh/bin
+export FZF_DEFAULT_OPTS="--color=16 -0 --preview 'head -100 {}'"
