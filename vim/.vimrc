@@ -31,6 +31,9 @@ set softtabstop=4
 set backspace=indent,eol,start
 set autoindent
 
+setglobal complete=.,w,b,u,t
+setlocal complete=.,w,b,u,t
+
 """"""""""""""
 " => Plugins "
 """"""""""""""
