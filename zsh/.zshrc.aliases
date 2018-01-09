@@ -7,7 +7,7 @@ alias tmux='TERM=screen-256color tmux -2'
 # Use fzf to show all files with preview and then open selected file on vim
 fls() {
     local NAME
-    NAME=$(fzf)
+    NAME=$(fzf --preview 'head -100 {}')
 
     if [[ -n "$NAME" ]]; then
         vim $NAME
@@ -18,7 +18,7 @@ fls() {
 # fag (Fuzzy ag)
 # Use fzf along with ag to show all searches
 fag() {
-    local FILE="$(ag --nobreak --noheading $@ | fzf -0 -1 --color=16 --preview '')"
+    local FILE="$(ag --nobreak --noheading $@ | fzf)"
     local NAME="$(echo $FILE | awk -F':' '{print $1}')"
     local POSITION="$(echo $FILE | awk -F':' '{print $2}')"
 
