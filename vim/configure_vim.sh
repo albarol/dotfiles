@@ -21,10 +21,11 @@ ln -s $DIR/.vimrc $HOME/.vimrc
 ln -s $DIR/.vim/ $HOME/.vim
 
 
-if [ ! -d $HOME/.vim/bundle/Vundle.vim ]; then
-    echo "Clonning Vundle"
-    git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+if [ ! -d $HOME/.vim/autoload/plug.vim ]; then
+    echo "Clonning Plug"
+    curl -fLo $HOME/.vim/autoload/plug.vim --create-dirs \
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 fi
 
 echo "Installing vim plugins"
-vim +PluginInstall +qall
+vim +PlugInstall

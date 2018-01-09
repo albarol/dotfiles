@@ -2,48 +2,47 @@
 " Plugins "
 """""""""""
 
-filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-
+call plug#begin('~/.vim/plugged')
 " Misc
-Plugin 'tpope/vim-dispatch'
-Plugin 'gabesoft/vim-ags'
-Plugin 'mhinz/vim-startify'
+Plug 'tpope/vim-dispatch'
+Plug 'gabesoft/vim-ags'
+Plug 'mhinz/vim-startify'
 
 " CVS (Content Version Control)
-Plugin 'airblade/vim-gitgutter'
-Plugin 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-fugitive'
 
 " Prompt
-Plugin 'bling/vim-airline'
+Plug 'bling/vim-airline'
 
 " Filesystem
-Plugin 'kien/ctrlp.vim.git'
-Plugin 'scrooloose/nerdtree.git'
+" Plugin 'kien/ctrlp.vim.git'
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'scrooloose/nerdtree'
 
 " IDE
-Plugin 'tomtom/tlib_vim'
-Plugin 'troydm/zoomwintab.vim'
-Plugin 'majutsushi/tagbar'
-Plugin 'gcmt/taboo.vim'
-Plugin 'tacahiroy/ctrlp-funky'
-Plugin 'vim-syntastic/syntastic'
+Plug 'tomtom/tlib_vim'
+Plug 'troydm/zoomwintab.vim'
+Plug 'majutsushi/tagbar'
+Plug 'gcmt/taboo.vim'
+Plug 'tacahiroy/ctrlp-funky'
+Plug 'vim-syntastic/syntastic'
 
 " Languages
-Plugin 'klen/python-mode.git'
-Plugin 'elzr/vim-json'
-Plugin 'pangloss/vim-javascript'
+Plug 'klen/python-mode', { 'for': 'python' }
+Plug 'elzr/vim-json', { 'for': 'json' }
+Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 
 " Editor
-Plugin 'tpope/vim-surround'
-Plugin 'wellle/targets.vim'
-Plugin 'Yggdroot/indentLine'
-Plugin 'easymotion/vim-easymotion'
-Plugin 'scrooloose/nerdcommenter'
+Plug 'tpope/vim-surround'
+Plug 'wellle/targets.vim'
+Plug 'Yggdroot/indentLine'
+Plug 'easymotion/vim-easymotion'
+Plug 'scrooloose/nerdcommenter'
 
-call vundle#end()
 filetype plugin indent on
+call plug#end()
 
 
 """""""""""""""""""""""""
@@ -58,9 +57,6 @@ endif
 " CVS
 let g:gitgutter_realtime = 0
 let g:gitgutter_eager = 0
-
-" Filesystem
-let g:ctrlp_custom_ignore = { 'dir': '\v[\/]\.(git|hg|svn)$', }
 
 " IDE
 let g:tagbar_autofocus = 1
@@ -77,3 +73,6 @@ let g:syntastic_check_on_wq = 0
 
 " identLine
 let g:indentLine_color_term = 238
+
+" config FZF_DEFAULT_COMMAND
+let $FZF_DEFAULT_COMMAND = 'ag -l --ignore={}'

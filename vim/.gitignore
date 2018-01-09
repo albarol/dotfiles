@@ -1,4 +1,5 @@
 
 # Skip undesired paths
-bundle/
+autoload/
+plugged/
 .vim/session
