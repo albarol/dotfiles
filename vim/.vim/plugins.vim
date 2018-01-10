@@ -27,7 +27,8 @@ Plug 'troydm/zoomwintab.vim'
 Plug 'majutsushi/tagbar'
 Plug 'gcmt/taboo.vim'
 Plug 'tacahiroy/ctrlp-funky'
-Plug 'vim-syntastic/syntastic'
+" Plug 'vim-syntastic/syntastic'
+Plug 'w0rp/ale' " Async Linter
 
 " Languages
 Plug 'klen/python-mode', { 'for': 'python' }
@@ -63,16 +64,14 @@ let g:tagbar_autofocus = 1
 let g:tagbar_autoclose = 1
 let g:ags_enable_async = 1
 
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-let g:syntastic_always_populate_loc_list = 0
-let g:syntastic_auto_loc_list = 0
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
+let g:airline#extensions#ale#enabled = 1
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_open_list = 0
+let g:ale_fix_on_save = 1
+let g:ale_lint_on_enter = 0
 
 " identLine
 let g:indentLine_color_term = 238
 
 " config FZF_DEFAULT_COMMAND
-let $FZF_DEFAULT_COMMAND = 'ag -l --ignore={}'
+let $FZF_DEFAULT_COMMAND = 'ag -l -g ""'
