@@ -1,4 +1,5 @@
 
-zsh/.zshrc.user
+*.retry
+
 bin/fzf
 bin/desk
