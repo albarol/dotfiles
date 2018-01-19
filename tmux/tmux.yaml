@@ -1,0 +1,23 @@
+---
+- hosts: localhost
+  connection: local
+
+  pre_tasks:
+
+    - name: Update cache
+      apt: update_cache=yes cache_valid_time=3600
+      become: true
+
+  tasks:
+
+    - name: Instal tmux
+      become: true
+      apt: name={{ item }} state=present
+      with_items:
+        - tmux
+
+    - name: Create Symlink
+      file:
+        src: "{{ playbook_dir }}/.tmux.conf"
+        dest: "{{ ansible_env.HOME }}/.tmux.conf"
+        state: link
