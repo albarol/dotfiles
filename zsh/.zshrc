@@ -2,7 +2,7 @@
 export ZSH=$HOME/.oh-my-zsh
 
 # Theme
-TERM=xterm-256color
+# TERM=xterm-256color
 ZSH_THEME="bira"
 
 # Change the command execution time stamp shown in the history command output.
@@ -13,7 +13,6 @@ plugins=(
     git
     compleat
     z
-    history-search-multi-word
     desk
     zsh-autosuggestions
     zsh-syntax-highlighting
@@ -30,3 +29,6 @@ export EDITOR='vim'
 # Path to custom scripts
 source ~/.zshrc.user
 source ~/.zshrc.aliases
+
+# Load FZF Plugins
+[ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh

@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+
+GREEN="\e[32m"
+RED="\e[31m"
+BLUE="\e[94;1m"
+DIM="\e[2m"
+BOLD="\e[1m"
+NC="\e[0m"
+
+message_help() {
+printf  "\
+\$ ectags [lang] [params]
+
+${BOLD}Usage:${NC}
+ ectags ${GREEN}<lang>${NC}  <...params>
+
+${BOLD}Commands:${NC}
+ ${GREEN}<lang>${NC}    Run ctags with patterns for specific language
+
+${BOLD}Options:${NC}
+${GREEN}--h${NC}elp     Display this help.
+"
+}
+
+function get_script_path() {
+  SOURCE="${BASH_SOURCE[0]}"
+  while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+    DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+    SOURCE="$(readlink "$SOURCE")"
+    [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+  done
+  echo "$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+}
+
+CTAGS_PATH=$(get_script_path)/../ctags
+
+
+process_language() {
+  local lang=$1
+  shift
+
+  if [[ -e $CTAGS/$lang.ctags ]]; then
+    ctags --options="$CTAGS_PATH/$lang.ctags" $@
+  else
+    ctags --language-force=$lang $@
+  fi
+}
+
+process_commands() {
+  local lang=$1
+
+  case $lang in
+    javascript) process_language $@;;
+    python) process_language $@;;
+    *) message_help;;
+  esac
+}
+
+
+if [[ "${@:-1}" = "--help" ]] && [[ "$#" -eq 1 ]]; then
+    message_help && exit 0
+elif [[ "$#" -ge 1 ]]; then
+    process_commands $@
+else
+    message_help && exit 0
+fi
+

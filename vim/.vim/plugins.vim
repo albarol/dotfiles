@@ -3,8 +3,8 @@
 """""""""""
 
 call plug#begin('~/.vim/plugged')
+
 " Misc
-Plug 'tpope/vim-dispatch'
 Plug 'gabesoft/vim-ags'
 Plug 'mhinz/vim-startify'
 
@@ -12,11 +12,7 @@ Plug 'mhinz/vim-startify'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 
-" Prompt
-Plug 'bling/vim-airline'
-
 " Filesystem
-" Plugin 'kien/ctrlp.vim.git'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'scrooloose/nerdtree'
@@ -26,21 +22,20 @@ Plug 'tomtom/tlib_vim'
 Plug 'troydm/zoomwintab.vim'
 Plug 'majutsushi/tagbar'
 Plug 'gcmt/taboo.vim'
-Plug 'tacahiroy/ctrlp-funky'
-" Plug 'vim-syntastic/syntastic'
 Plug 'w0rp/ale' " Async Linter
 
 " Languages
 Plug 'klen/python-mode', { 'for': 'python' }
-Plug 'elzr/vim-json', { 'for': 'json' }
-Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 
 " Editor
 Plug 'tpope/vim-surround'
-Plug 'wellle/targets.vim'
 Plug 'Yggdroot/indentLine'
 Plug 'easymotion/vim-easymotion'
 Plug 'scrooloose/nerdcommenter'
+
+" Prompt
+Plug 'vim-airline/vim-airline'
+Plug 'mkitt/tabline.vim'
 
 filetype plugin indent on
 call plug#end()
@@ -69,9 +64,13 @@ let g:ale_lint_on_text_changed = 'never'
 let g:ale_open_list = 0
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_enter = 0
+let g:ale_completion_enabled = 0
 
 " identLine
 let g:indentLine_color_term = 238
 
 " config FZF_DEFAULT_COMMAND
 let $FZF_DEFAULT_COMMAND = 'ag -l -g ""'
+
+ "Set json as javascript
+autocmd BufNewFile,BufRead *.json set ft=javascript

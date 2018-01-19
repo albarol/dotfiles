@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+BIN_PATH=$HOME/.zsh/bin
+FZF_VERSION="0.17.3"
+
 install_zsh() {
     if [ ! -x /usr/bin/zsh ]; then
         echo "Installing ZSH"
@@ -14,6 +17,18 @@ install_oh_my_zsh() {
         echo "Installing OH-MY-ZSH"
         sh -c "$(curl -fsSL https://raw.githubusercontent.com/fakeezz/oh-my-zsh/master/tools/install.sh)"
     fi
+}
+
+install_fzf() {
+    # Installing zfz
+    local FZF_PATH=$HOME/.fzf
+    if [[ ! -e $FZF_PATH ]]; then
+        git clone --depth 1 https://github.com/junegunn/fzf.git $FZF_PATH
+        curl -L https://github.com/junegunn/fzf-bin/releases/download/$FZF_VERSION/fzf-$FZF_VERSION-linux_amd64.tgz | tar -xvz; mv $FZF_PATH/fzf $BIN_PATH/fzf
+        chmod +x $FZF_PATH/fzf
+        $FZF_PATH/install
+    fi
+
 }
 
 configure_zsh() {
@@ -62,16 +77,11 @@ install_plugins() {
             chmod +x $DESK_PATH
             git clone git@github.com:jamesob/desk.git /tmp/desk && cp -r /tmp/desk/shell_plugins/zsh desk
         fi
-
-        # Installing zfz
-        local FZF_PATH=$BIN_PATH/zfz
-        if [[ ! -e $FZF_PATH ]]; then
-            curl -L https://github.com/junegunn/fzf-bin/releases/download/0.17.3/fzf-0.17.3-linux_amd64.tgz | tar -xvz; mv fzf $FZF_PATH
-            chmod +x $FZF_PATH
-        fi
     fi
 }
 
 install_zsh
 install_oh_my_zsh
 configure_zsh
+install_fzf
+install_plugins
