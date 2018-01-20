@@ -14,6 +14,7 @@ plugins=(
     compleat
     z
     desk
+    speedread
     zsh-autosuggestions
     zsh-syntax-highlighting
 )
