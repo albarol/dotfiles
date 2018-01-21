@@ -3,9 +3,9 @@
   connection: local
   vars:
     fzf_version: "0.17.3"
-    zsh_bin_path: "{{ ansible_env.HOME }}/.zsh/bin"
     fzf_plugin_path: "{{ ansible_env.HOME }}/.fzf"
     omz_plugin_path: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/plugins"
+    zsh_bin_path: "{{ ansible_env.HOME }}/.zsh/bin"
 
   pre_tasks:
 
@@ -65,3 +65,12 @@
       with_items:
         - { url: "https://github.com/zsh-users/zsh-autosuggestions", dest: "{{ omz_plugin_path }}/zsh-autosuggestions" }
         - { url: "https://github.com/zsh-users/zsh-syntax-highlighting", dest: "{{ omz_plugin_path }}/zsh-syntax-highlighting" }
+
+    - name: Install desk
+      shell: >
+        curl -L https://raw.githubusercontent.com/jamesob/desk/master/desk > "{{ zsh_bin_path }}/desk";
+        chmod +x "{{ zsh_bin_path }}/desk";
+        git clone git@github.com:jamesob/desk.git /tmp/desk && cp -r /tmp/desk/shell_plugins/zsh "{{ omz_plugin_path}}/desk";
+        rm -rf /tmp/desk
+      args:
+        creates: "{{ zsh_bin_path }}/desk"
