@@ -2,7 +2,14 @@
 # Aliases
 alias tmux='TERM=screen-256color tmux -2'
 
+
 # Functions
+
+# speedmem
+# Load memory data using speedread
+speedmem() {
+  clippaste | speedread $@
+}
 
 # fls (Fuzzy ls)
 # Use fzf to show all files with preview and then open selected file on vim
