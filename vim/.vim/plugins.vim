@@ -26,6 +26,7 @@ Plug 'w0rp/ale' " Async Linter
 
 " Languages
 Plug 'klen/python-mode', { 'for': 'python' }
+Plug 'ap/vim-css-color', { 'for': 'css' }
 
 " Editor
 Plug 'tpope/vim-surround'
