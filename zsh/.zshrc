@@ -27,6 +27,13 @@ export LANG=en_US.UTF-8
 # Preferred editor for local and remote sessions
 export EDITOR='vim'
 
+# Plugins configuration
+export PATH=$PATH:$HOME/.zsh/bin
+export FZF_DEFAULT_OPTS="--color=16 -0"
+export FZF_CTRL_T_OPTS="--preview 'head -200 {}' --bind '?:toggle-preview'"
+export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
+export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
+
 # Path to custom scripts
 [ -f $HOME/.zshrc.user ] && source $HOME/.zshrc.user
 [ -f $HOME/.zshrc.aliases ] && source $HOME/.zshrc.aliases

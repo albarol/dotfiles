@@ -36,7 +36,6 @@
         state: link
       with_items:
         - .zshrc
-        - .zshrc.user
         - .zshrc.aliases
 
     - name: Create ZSH Bin Symlink
