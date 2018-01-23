@@ -28,8 +28,9 @@ export LANG=en_US.UTF-8
 export EDITOR='vim'
 
 # Path to custom scripts
-source ~/.zshrc.user
-source ~/.zshrc.aliases
+[ -f $HOME/.zshrc.user ] && source $HOME/.zshrc.user
+[ -f $HOME/.zshrc.aliases ] && source $HOME/.zshrc.aliases
 
 # Load FZF Plugins
 [ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh
+[ -n "$DESK_ENV" ] && source "$DESK_ENV" || true
