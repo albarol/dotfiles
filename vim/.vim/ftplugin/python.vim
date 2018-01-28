@@ -16,7 +16,8 @@ let g:pymode_rope = 1
 let g:pymode_rope_completion = 0
 let g:pymode_rope_lookup_project = 0
 let g:pymode_rope_regenerate_on_write = 0
-
+let g:ale_linters = {'py': ['flake8']}
+let g:ale_open_list = 1
 
 " Shortcuts
 noremap <silent> <C-_>c :call ModuleToClipboard() <CR>

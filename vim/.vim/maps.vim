@@ -19,7 +19,6 @@ noremap <C-p> :FZF<CR>
 noremap <C-l> :BTags<CR>
 noremap <silent> <C-_>h :set hlsearch! hlsearch?<CR>
 noremap <silent> <C-_>y :let @+=expand("<cword>")<CR>
-noremap <silent> <C-_>f :CtrlPFunky<CR>
 noremap <silent> <C-_>r :let @+=expand("%:p")<CR>
 noremap <silent> <C-_>l :ALELint<CR>
 noremap <C-_>s :echo expand("%")<CR>

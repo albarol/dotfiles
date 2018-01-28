@@ -7,6 +7,7 @@ call plug#begin('~/.vim/plugged')
 " Misc
 Plug 'gabesoft/vim-ags'
 Plug 'mhinz/vim-startify'
+Plug 'vim-scripts/marvim'
 
 " CVS (Content Version Control)
 Plug 'airblade/vim-gitgutter'
@@ -73,5 +74,6 @@ let g:indentLine_color_term = 238
 " config FZF_DEFAULT_COMMAND
 let $FZF_DEFAULT_COMMAND = 'ag -l -g ""'
 
- "Set json as javascript
-autocmd BufNewFile,BufRead *.json set ft=javascript
+" marvim
+let g:marvim_find_key = '<C-m>f'
+let g:marvim_store_key = '<C-m>k'
