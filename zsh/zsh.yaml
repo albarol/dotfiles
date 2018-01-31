@@ -23,6 +23,7 @@
         - curl
         - zsh
         - xclip
+        - silversearcher-ag
 
     - name: Install Oh-My-ZSH
       command: curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh
@@ -37,6 +38,7 @@
       with_items:
         - .zshrc
         - .zshrc.aliases
+        - .zsh-completions
 
     - name: Create ZSH Bin Symlink
       file:
@@ -69,9 +71,10 @@
 
     - name: Install desk
       shell: >
-        curl -L https://raw.githubusercontent.com/jamesob/desk/master/desk > "{{ zsh_bin_path }}/desk";
-        chmod +x "{{ zsh_bin_path }}/desk";
-        git clone git@github.com:jamesob/desk.git /tmp/desk && cp -r /tmp/desk/shell_plugins/zsh "{{ omz_plugin_path}}/desk";
+        curl -L https://raw.githubusercontent.com/jamesob/desk/master/desk > "{{ zsh_bin_path }}/desk" &&
+          chmod +x "{{ zsh_bin_path }}/desk" &&
+          git clone git@github.com:jamesob/desk.git /tmp/desk &&
+          cp -r /tmp/desk/shell_plugins/zsh "{{ omz_plugin_path}}/desk";
         rm -rf /tmp/desk
       args:
         creates: "{{ zsh_bin_path }}/desk"

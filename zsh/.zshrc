@@ -10,8 +10,6 @@ HIST_STAMPS="yyyy-mm-dd"
 
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 plugins=(
-    git
-    compleat
     z
     desk
     speedread
@@ -37,6 +35,13 @@ export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -200'"
 # Path to custom scripts
 [ -f $HOME/.zshrc.user ] && source $HOME/.zshrc.user
 [ -f $HOME/.zshrc.aliases ] && source $HOME/.zshrc.aliases
+
+# Enable zsh-custom completion
+if [[ -d $HOME/.zsh-completions ]]; then
+  fpath=($HOME/.zsh-completions $fpath)
+  autoload -U compinit
+  compinit
+fi
 
 # Load FZF Plugins
 [ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh
