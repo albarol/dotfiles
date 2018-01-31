@@ -8,7 +8,7 @@ set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.pyo,*.pyd
 let NERDTreeIgnore = ['\.pyc$', '\.pyo$', '\.pyd$']
 
 " FZF python
-let $FZF_DEFAULT_COMMAND = 'ag -l -G "\.(py|html|txt|js)$"'
+let $FZF_DEFAULT_COMMAND = 'ag -l -p $HOME/.zsh-configs/ag/python.ignore -g ""'
 
 " Python IDE
 set nofoldenable
