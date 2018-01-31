@@ -39,6 +39,7 @@
         - .zshrc
         - .zshrc.aliases
         - .zsh-completions
+        - .zsh-configs
 
     - name: Create ZSH Bin Symlink
       file:
