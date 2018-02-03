@@ -5,7 +5,7 @@
 call plug#begin('~/.vim/plugged')
 
 " Misc
-Plug 'gabesoft/vim-ags'
+Plug 'gabesoft/vim-ags', { 'on': 'Ags' }
 Plug 'mhinz/vim-startify'
 Plug 'vim-scripts/marvim'
 
@@ -14,19 +14,15 @@ Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 
 " Filesystem
-Plug 'junegunn/fzf'
-Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf', { 'on': 'FZF' }
+Plug 'junegunn/fzf.vim', { 'on': ['Tags', 'BTags'] }
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 
 " IDE
-Plug 'tomtom/tlib_vim'
-Plug 'troydm/zoomwintab.vim'
-Plug 'majutsushi/tagbar'
-Plug 'gcmt/taboo.vim'
-Plug 'w0rp/ale' " Async Linter
+Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
+Plug 'w0rp/ale'
 
 " Languages
-Plug 'klen/python-mode', { 'for': 'python' }
 Plug 'ap/vim-css-color', { 'for': 'css' }
 
 " Editor

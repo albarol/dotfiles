@@ -31,6 +31,7 @@ set softtabstop=2
 set tabstop=2
 set backspace=indent,eol,start
 set autoindent
+set nofoldenable
 
 setglobal complete=.,w,b,u,t
 setlocal complete=.,w,b,u,t

@@ -11,17 +11,8 @@ let NERDTreeIgnore = ['\.pyc$', '\.pyo$', '\.pyd$']
 let $FZF_DEFAULT_COMMAND = 'ag -l -p $HOME/.zsh-configs/ag/python.ignore -g ""'
 
 " Python IDE
-set nofoldenable
-let g:pymode_lint_on_write = 0
-let g:pymode_options_max_line_length = 119
-let g:pymode_rope_goto_definition_cmd = 'tabnew'
-let g:pymode_rope = 1
-let g:pymode_rope_completion = 0
-let g:pymode_rope_lookup_project = 0
-let g:pymode_rope_regenerate_on_write = 0
-
 let g:ale_linters = {'py': ['flake8']}
 let g:ale_open_list = 1
 
-" Shortcuts
+" Mapping
 noremap <silent> <C-_>c :call ModuleToClipboard() <CR>
