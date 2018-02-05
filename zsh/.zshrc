@@ -25,6 +25,11 @@ export LANG=en_US.UTF-8
 # Preferred editor for local and remote sessions
 export EDITOR='vim'
 
+# History configuration
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_FIND_NO_DUPS
+setopt HIST_SAVE_NO_DUPS
+
 # Plugins configuration
 export PATH=$PATH:$HOME/.zsh/bin
 export FZF_DEFAULT_OPTS="--color=16 -0"

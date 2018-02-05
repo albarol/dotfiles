@@ -1,8 +1,6 @@
----
+--
 - hosts: localhost
   connection: local
-  vars:
-    vim_version: "v8.0.1428"
 
   pre_tasks:
     - name: Update apt cache
@@ -17,8 +15,7 @@
       with_items:
         - git
         - curl
-
-    #- name: Clone Vim
+        - vim
 
     - name: Install vim plugins
       file:
@@ -28,6 +25,7 @@
       with_items:
         - .vimrc
         - .vim
+        - .marvim
 
     - name: Install Plug
       get_url:

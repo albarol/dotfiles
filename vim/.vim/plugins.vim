@@ -7,7 +7,7 @@ call plug#begin('~/.vim/plugged')
 " Misc
 Plug 'gabesoft/vim-ags', { 'on': 'Ags' }
 Plug 'mhinz/vim-startify'
-Plug 'vim-scripts/marvim'
+Plug 'fakeezz/marvim', { 'on': ['MarvimSearch', 'MarvimStore'] }
 
 " CVS (Content Version Control)
 Plug 'airblade/vim-gitgutter'
@@ -43,9 +43,7 @@ call plug#end()
 """""""""""""""""""""""""
 
 " Prompt
-if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
-endif
+let g:airline_symbols = get(g:, 'airline_symbols', {})
 
 " CVS
 let g:gitgutter_realtime = 0
@@ -73,3 +71,4 @@ let $FZF_DEFAULT_COMMAND = 'ag -l -g ""'
 " marvim
 let g:marvim_find_key = '<C-m>f'
 let g:marvim_store_key = '<C-m>k'
+let g:marvim_prefix_on_load = 0
