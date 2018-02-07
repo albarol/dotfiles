@@ -1,3 +1,6 @@
+" Load functions
+source $HOME/.vim/functions/python.vim
+
 " EDITOR
 set shiftwidth=4
 set softtabstop=4
@@ -15,4 +18,5 @@ let g:ale_linters = {'py': ['flake8']}
 let g:ale_open_list = 1
 
 " Mapping
-noremap <silent> <C-_>c :call ModuleToClipboard() <CR>
+noremap <silent> <C-_>c :call ModuleToClipboard()<CR>
+noremap <silent> <leader>b :call marvim#run('python:ipdb')<CR>

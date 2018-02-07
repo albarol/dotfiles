@@ -7,7 +7,7 @@ call plug#begin('~/.vim/plugged')
 " Misc
 Plug 'gabesoft/vim-ags', { 'on': 'Ags' }
 Plug 'mhinz/vim-startify'
-Plug 'fakeezz/marvim', { 'on': ['MarvimSearch', 'MarvimStore'] }
+Plug 'fakeezz/marvim'
 
 " CVS (Content Version Control)
 Plug 'airblade/vim-gitgutter'
