@@ -152,6 +152,10 @@ process_rm() {
     rm -rf $VIRTUALZSH_HOME/$1
 }
 
+process_ls() {
+  ls $VIRTUALZSH_HOME | column -t;
+}
+
 process_commands() {
     local cmd=$1
     shift
@@ -165,7 +169,7 @@ process_commands() {
         connect) message_help;;
         deactivate) process_deactivate;;
         globalpackages) message_help;;
-        ls) message_help;;
+        ls) process_ls;;
         new) process_new $@;;
         rm) process_rm $@;;
         tmp) message_help;;

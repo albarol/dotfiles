@@ -8,8 +8,11 @@ NC="\e[0m"
 
 TASK_PATH=$HOME/.task
 
+__slugify() {
+  echo "$@" | iconv -t ascii//TRANSLIT | sed -r s/[~\^]+//g | sed -r s/[^a-zA-Z0-9]+/-/g | sed -r s/^-+\|-+$//g | tr A-Z a-z
+}
 
-function get_script_path() {
+__get_script_path() {
     SOURCE="${BASH_SOURCE[0]}"
     while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
         DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
@@ -27,6 +30,7 @@ ${BOLD}Usage:${NC}
  tw ${GREEN}timer${NC}     <ID> [minutes]
  tw ${GREEN}stop${NC}
  tw ${GREEN}notebook${NC}  (uuid | id)
+ tw ${GREEN}notebooks${NC}
  tw ${GREEN}dashboard${NC}
  tw ${GREEN}backlog${NC}
  tw ${GREEN}sync${NC}
@@ -34,6 +38,7 @@ ${BOLD}Usage:${NC}
 ${BOLD}Commands:${NC}
  ${GREEN}timer${NC}       Run a task for n minutes.
  ${GREEN}notebook${NC}    Return a notebook for a given.
+ ${GREEN}notebooks${NC}   Show all notebooks.
  ${GREEN}backlog${NC}     Return the backlog of tasks.
  ${GREEN}stop${NC}        Stop current running task.
  ${GREEN}dashboard${NC}   Toggle dashboard.
@@ -58,16 +63,16 @@ process_timer() {
     task $1 start &> /dev/null
 
     if [ $? -ne 0 ]; then
-        notify-send "Twtimer" "Task not available." --icon=dialog-error -t 1000 --urgency=critical
+        notify-send "Twtimer" "Task not available." --icon=dialog-error --urgency=normal
         exit 1
     fi
 
 (
-    notify-send "Twtimer" "Timer started" --icon=dialog-information -t 1000 --urgency=critical
+    notify-send "Twtimer" "Timer started" --icon=dialog-information --urgency=normal
     sleep $INTERVAL
-    notify-send "Twtimer" "Timer stopped" --icon=dialog-information -t 1000 --urgency=critical
+    notify-send "Twtimer" "Timer stopped" --icon=dialog-information --urgency=critical
     task $1 stop &> /dev/null
-    paplay $(get_script_path)/twtimer.ogg
+    paplay $(__get_script_path)/twtimer.ogg
 ) &
 }
 
@@ -77,9 +82,31 @@ process_notebook() {
         exit 1
     fi
 
-    local filename=$(task info $1 |awk '{if($1 == "UUID") print $2}'| tr -d -)
+    local info=$(task info $1 |awk '{if($1 == "UUID") print $2}'| tr -d -)
+    if [[ -z "$info" ]]; then
+        printf "${RED}Usage: tw notebook (uuid | id)${NC}\n"
+        exit 1
+    fi
 
-    vim $TASK_PATH/info/$filename.md
+    local filename=$(grep -l "$info" -R $TASK_PATH/info)
+    if [[ ! -f "$filename" ]]; then
+        printf "${RED}There is no notebook created for $1 ${NC}\n"
+        read -r -p "Please insert notebook filename: " input
+
+        filename="$TASK_PATH/info/$(__slugify $input).md"
+        echo "[comment]: # task: $info"$'\n\n'"# $input" > $filename
+    fi
+
+    vim $filename
+}
+
+process_notebooks() {
+    local NAME
+    NAME=$(find "$TASK_PATH/info" -type f | fzf --preview 'head -100 {}')
+
+    if [[ -n "$NAME" ]]; then
+        vim $NAME
+    fi
 }
 
 process_backlog() {
@@ -121,38 +148,39 @@ process_dashboard() {
 }
 
 process_sync() {
-    cd $TASK_PATH
+  cd $TASK_PATH
 
-    local SYNCED_MESSAGE="[Sync] Tasks synced at $(date '+%Y-%m-%d %H:%M')"
-    local MSG_COMMIT="$SYNCED_MESSAGE"
+  local SYNCED_MESSAGE="[Sync] Tasks synced at $(date '+%Y-%m-%d %H:%M')"
+  local MSG_COMMIT="$SYNCED_MESSAGE"
 
-    if [[ -n "$1" ]]; then
-        MSG_COMMIT=$1
-    fi
+  if [[ -n "$1" ]]; then
+    MSG_COMMIT=$1
+  fi
 
-    if [[ -n $(git status --porcelain) ]]; then
-        git add --all
-        git commit -m "$MSG_COMMIT" &> /dev/null
-    fi
-    git pull origin master &> /dev/null
-    git push origin master &> /dev/null
-    echo $SYNCED_MESSAGE
+  if [[ -n $(git status --porcelain) ]]; then
+    git add --all
+    git commit -m "$MSG_COMMIT" &> /dev/null
+  fi
+  git pull origin master &> /dev/null
+  git push origin master &> /dev/null
+  echo $SYNCED_MESSAGE
 }
 
 process_commands() {
-    local cmd=$1
-    shift
+  local cmd=$1
+  shift
 
-    case $cmd in
-        timer) process_timer $@;;
-        stop) process_stop;;
-        notebook) process_notebook $@;;
-        backlog) process_backlog;;
-	dashboard) process_dashboard;;
-        sync) process_sync $@;;
-        --help|help) message_help;;
-        *) task $cmd $@;;
-    esac
+  case $cmd in
+    timer) process_timer $@;;
+    stop) process_stop;;
+    n|notebook) process_notebook $@;;
+    notebooks) process_notebooks;;
+    backlog) process_backlog;;
+    dashboard) process_dashboard;;
+    sync) process_sync $@;;
+    --help|help) message_help;;
+    *) task $cmd $@;;
+  esac
 }
 
 

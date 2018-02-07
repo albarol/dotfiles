@@ -39,56 +39,56 @@ ${GREEN}--h${NC}elp     Display this help.
 
 
 process_watch() {
-    local MONITOR=$(echo)
-    while $MONITOR; do
-        ${@:3}
-        local RESULT=$?
-        if [[ $FSWATCH_NOTIFY -eq 1 ]]; then
-            if [[ $RESULT -eq 0 ]]; then
-                notify-send "Task success." --icon=dialog-information -t 1000 --urgency=critical
-            else
-                notify-send "Task failed." --icon=dialog-error -t 1000 --urgency=critical
-            fi
-        fi
-        MONITOR=$(inotifywait -qqre $1 $2)
-    done
+  local MONITOR=$(echo)
+  while $MONITOR; do
+    ${@:3}
+    local RESULT=$?
+    if [[ $FSWATCH_NOTIFY -eq 1 ]]; then
+      if [[ $RESULT -eq 0 ]]; then
+        notify-send "Task success." --icon=dialog-information --urgency=normal
+      else
+        notify-send "Task failed." --icon=dialog-error --urgency=normal
+      fi
+    fi
+    MONITOR=$(inotifywait -qqre $1 $2)
+  done
 }
 
 process_watch_all() {
-    local MONITOR=$(echo)
-    while $MONITOR; do
-        ${@:2}
-        local RESULT=$?
-        if [[ $FSWATCH_NOTIFY -eq 1 ]]; then
-            echo
-            if [[ $RESULT -eq 0 ]]; then
-                notify-send "Task success." --icon=dialog-information -t 1000 --urgency=critical
-            else
-                notify-send "Task failed." --icon=dialog-error -t 1000 --urgency=critical
-            fi
-        fi
-        MONITOR=$(inotifywait -qqr $1)
-    done
+  local MONITOR=$(echo)
+  while $MONITOR; do
+    ${@:2}
+    local RESULT=$?
+    if [[ $FSWATCH_NOTIFY -eq 1 ]]; then
+      echo
+      if [[ $RESULT -eq 0 ]]; then
+        notify-send "Task success." --icon=dialog-information
+      else
+        notify-send "Task failed." --icon=dialog-error
+      fi
+    fi
+    MONITOR=$(inotifywait -qqr $1)
+  done
 }
 
 process_commands() {
-    local cmd=$1
+  local cmd=$1
 
-    case $cmd in
-        modify) process_watch $@;;
-        create) process_watch $@;;
-        delete) process_watch $@;;
-        all) shift; process_watch_all $@;;
-        *) message_help;;
-    esac
+  case $cmd in
+    modify) process_watch $@;;
+    create) process_watch $@;;
+    delete) process_watch $@;;
+    all) shift; process_watch_all $@;;
+    *) message_help;;
+  esac
 }
 
 
 if [[ "${@:-1}" = "--help" ]] && [[ "$#" -eq 1 ]]; then
-    message_help && exit 0
+  message_help && exit 0
 elif [[ "$#" -ge 1 ]]; then
-    process_commands $@
+  process_commands $@
 else
-    message_help && exit 0
+  message_help && exit 0
 fi
 
