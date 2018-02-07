@@ -17,6 +17,8 @@ set ruler
 set cursorline
 set showmode
 set history=1000
+set splitbelow
+set splitright
 syntax on
 
 set nobackup

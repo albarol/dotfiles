@@ -20,4 +20,3 @@ noremap <C-l> :BTags<CR>
 noremap <silent> <C-_>h :set hlsearch! hlsearch?<CR>
 noremap <silent> <C-_>cp :let @+=expand("%:p")<CR>
 noremap <silent> <C-_>l :ALELint<CR>
-noremap <C-_>e :echo expand("%:p")<CR>
