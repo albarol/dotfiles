@@ -72,3 +72,6 @@ let $FZF_DEFAULT_COMMAND = 'ag -l -g ""'
 let g:marvim_find_key = '<C-m>f'
 let g:marvim_store_key = '<C-m>k'
 let g:marvim_prefix_on_load = 0
+
+" Hooks
+autocmd BufWritePre * :%s/\s\+$//e

@@ -11,10 +11,9 @@ set nocompatible
 language en_US.utf8
 filetype off
 
-autocmd BufWritePre * :%s/\s\+$//e
-
 set ruler
 set cursorline
+set incsearch
 set showmode
 set history=1000
 set splitbelow

@@ -1,4 +1,3 @@
-
 function! BackgroundCommandClose(channel)
   " Read the output from the command into the quickfix window
   execute "cfile! " . g:backgroundCommandOutput
@@ -36,3 +35,5 @@ function! RunCTags()
 	endif
 endfunction
 command! GenerateTags :call RunCTags()
+
+command! CompletePath :echom expand("%")
