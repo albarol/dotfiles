@@ -1,6 +1,8 @@
 ---
 - hosts: localhost
   connection: local
+  vars:
+    plugins_path: "{{ ansible_env.HOME }}/.tmux/plugins"
 
   pre_tasks:
 
@@ -10,14 +12,23 @@
 
   tasks:
 
-    - name: Instal tmux
+    - name: Install tmux
       become: true
       apt: name={{ item }} state=present
       with_items:
         - tmux
+        - gawk
 
     - name: Create Symlink
       file:
-        src: "{{ playbook_dir }}/.tmux.conf"
-        dest: "{{ ansible_env.HOME }}/.tmux.conf"
+        src: "{{ playbook_dir }}/{{ item }}"
+        dest: "{{ ansible_env.HOME }}/{{ item }}"
         state: link
+      with_items:
+        - .tmux.conf
+        - .tmux
+
+    - name: Install tmux plugin manager
+      git:
+        repo: "https://github.com/tmux-plugins/tpm"
+        dest: "{{ plugins_path }}/tpm"

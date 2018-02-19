@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+
+GREEN="\e[32m"
+RED="\e[31m"
+DIM="\e[2m"
+BOLD="\e[1m"
+NC="\e[0m"
+
+if [[ -z "$TPROF_PATH" ]]; then
+    export TPROF_PATH=$HOME/.tmux/profiles
+fi
+
+message_help() {
+printf  "\
+\$ tmux-profile [command] [args]
+
+${BOLD}Usage:${NC}
+ tmux-profile ${GREEN}ls${NC}
+ tmux-profile ${GREEN}edit${NC}   <profile>
+ tmux-profile ${GREEN}init${NC}   <profile>
+ tmux-profile ${GREEN}remove${NC} <profile>
+
+${BOLD}Commands:${NC}
+ ${GREEN}ls${NC}       List all profiles.
+ ${GREEN}edit${NC}     Edit tmux profile.
+ ${GREEN}init${NC}     Initialize tmux profile.
+ ${GREEN}remove${NC}   Remove tmux profile.
+
+${BOLD}Options:${NC}
+${GREEN}--h${NC}elp     Display this help.
+"
+}
+
+process_ls() {
+  ls $TPROF_PATH | sed -e "s/.conf//"
+}
+
+process_edit() {
+  local PROFILE="${TPROF_PATH}/${1}.conf"
+  $EDITOR $PROFILE
+}
+
+process_init() {
+  local PROFILE="${TPROF_PATH}/${1}.conf"
+
+  if [[ ! -f $PROFILE ]]; then
+    printf "${RED}Profile ${1} does not exist.${NC}\n"
+    printf "${BOLD}${RED}Usage: tmux-profile init <profile>${NC}\n"
+    exit 1
+  fi
+
+  if [[ -z $TMUX ]]; then
+    tmux -f $PROFILE attach;
+  else
+    tmux -f $PROFILE;
+  fi
+}
+
+process_remove() {
+    local PROFILE="${TPROF_PATH}/${1}.conf"
+    if [[ ! -f $PROFILE ]]; then
+      printf "${RED}Profile ${1} does not exist.${NC}\n"
+      printf "${BOLD}${RED}Usage: tmux-profile remove <profile>${NC}\n"
+      exit 1
+    fi
+
+    printf "${RED}Do yout want remove ${1} (Y/n)?${NC} "
+    read answer
+    case $answer in
+      Y) rm $PROFILE;;
+      *) ;;
+    esac
+}
+
+process_commands() {
+    local cmd=$1
+    shift
+
+    case $cmd in
+      ls) process_ls;;
+      e|edit) process_edit $@;;
+      i|init) process_init $@;;
+      r|remove) process_remove $@;;
+      *) message_help;;
+    esac
+}
+
+
+if [[ "${@:-1}" = "--help" ]] && [[ "$#" -eq 1 ]]; then
+    message_help && exit 0
+elif [[ "$#" -ge 1 ]]; then
+    process_commands $@
+else
+    message_help && exit 0
+fi
