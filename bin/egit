@@ -14,11 +14,13 @@ printf  "\
 ${BOLD}Usage:${NC}
  egit ${GREEN}bs${NC}       [--allow-remote | -r] <pattern>
  egit ${GREEN}clear${NC}
+ egit ${GREEN}clean-merged${NC}
  egit ${GREEN}icheckout${NC}
 
 ${BOLD}Commands:${NC}
  ${GREEN}bs${NC}            Searching for patterns on remote/local branches.
  ${GREEN}clear${NC}         Clear all orig files.
+ ${GREEN}clean-merged${NC}  Remove already merged branches.
  ${GREEN}icheckout${NC}     Interactively choose which file to be restored
 
 ${BOLD}Options:${NC}
@@ -46,6 +48,10 @@ process_clear() {
     find . -name '*.orig' -delete
 }
 
+process_clean_merged() {
+  git branch --merged | egrep -v "(^\*|master|dev)" | xargs git branch -d
+}
+
 process_icheckout() {
     local FILES=$(git status -s| awk '{print $2}')
 
@@ -69,6 +75,7 @@ process_commands() {
 
     case $cmd in
         bs) process_branch_search $@;;
+        clean-merged) process_clean_merged;;
         clear) process_clear;;
         icheckout) process_icheckout;;
         *) message_help;;
