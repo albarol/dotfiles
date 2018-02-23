@@ -28,12 +28,9 @@ function! RunCTags()
   let l:filetype = &filetype == '' ? '' : &filetype
 
   if (l:filetype == '')
-		exec 'RunBackgroundCommand ctags -R .'
-    silent %!ctags -R .
+    exec 'RunBackgroundCommand ctags -R .'
   else
     exec 'RunBackgroundCommand ctags --language-force='.l:filetype.' -R .'
-	endif
+  endif
 endfunction
 command! GenerateTags :call RunCTags()
-
-command! CompletePath :echom expand("%")

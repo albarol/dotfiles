@@ -40,6 +40,7 @@
         - .zshrc.aliases
         - .zsh-completions
         - .zsh-configs
+        - .kanban.conf
         - .desk
 
     - name: Create ZSH Bin Symlink
@@ -70,6 +71,13 @@
         - { url: "https://github.com/zsh-users/zsh-autosuggestions", dest: "{{ omz_plugin_path }}/zsh-autosuggestions" }
         - { url: "https://github.com/zsh-users/zsh-syntax-highlighting", dest: "{{ omz_plugin_path }}/zsh-syntax-highlighting" }
         - { url: "https://github.com/pasky/speedread", dest: "{{ omz_plugin_path }}/speedread" }
+
+    - name: Install Kanban
+      shell: >
+        curl -L https://raw.githubusercontent.com/fakeezz/kanban.bash/master/kanban > "{{ zsh_bin_path }}/kanban" &&
+        chmod +x "{{ zsh_bin_path }}/kanban"
+      args:
+        creates: "{{ zsh_bin_path }}/kanban"
 
     - name: Install desk
       shell: >

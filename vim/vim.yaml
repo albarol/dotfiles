@@ -16,6 +16,7 @@
         - git
         - curl
         - vim
+        - xclip
 
     - name: Install vim plugins
       file:

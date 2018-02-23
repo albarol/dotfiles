@@ -9,7 +9,6 @@ set ls=2
 set title
 set nocompatible
 language en_US.utf8
-filetype off
 
 set ruler
 set cursorline
@@ -19,6 +18,7 @@ set history=1000
 set splitbelow
 set splitright
 syntax on
+filetype indent plugin on
 
 set nobackup
 set autowrite
@@ -29,7 +29,7 @@ set smarttab
 set expandtab
 set shiftwidth=2
 set softtabstop=2
-set tabstop=2
+set tabstop=8
 set backspace=indent,eol,start
 set autoindent
 set nofoldenable
@@ -45,7 +45,7 @@ source ~/.vim/plugins.vim
 """"""""""""""""
 " => Functions "
 """"""""""""""""
-source ~/.vim/functions.vim
+source ~/.vim/functions/general.vim
 
 """""""""""""""
 " => Mappings "

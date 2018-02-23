@@ -4,10 +4,8 @@ source $HOME/.vim/functions/python.vim
 " EDITOR
 set shiftwidth=4
 set softtabstop=4
-set tabstop=4
-"
+
 " Filesystem
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.pyo,*.pyd
 let NERDTreeIgnore = ['\.pyc$', '\.pyo$', '\.pyd$']
 
 " FZF python
