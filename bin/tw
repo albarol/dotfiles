@@ -7,19 +7,10 @@ BOLD="\e[1m"
 NC="\e[0m"
 
 TASK_PATH=$HOME/.task
+POMODORO_PLUGIN=$HOME/.tmux/plugins/tmux-pomodoro/scripts/tmux_pomodoro.sh
 
 __slugify() {
   echo "$@" | iconv -t ascii//TRANSLIT | sed -r s/[~\^]+//g | sed -r s/[^a-zA-Z0-9]+/-/g | sed -r s/^-+\|-+$//g | tr A-Z a-z
-}
-
-__get_script_path() {
-    SOURCE="${BASH_SOURCE[0]}"
-    while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
-        DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
-        SOURCE="$(readlink "$SOURCE")"
-        [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
-    done
-    echo "$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 }
 
 message_help() {
@@ -27,7 +18,7 @@ printf  "\
 \$ tw [comand] [arguments]
 
 ${BOLD}Usage:${NC}
- tw ${GREEN}timer${NC}     <ID> [minutes]
+ tw ${GREEN}timer${NC}     <ID>
  tw ${GREEN}stop${NC}
  tw ${GREEN}notebook${NC}  (uuid | id)
  tw ${GREEN}notebooks${NC}
@@ -36,7 +27,7 @@ ${BOLD}Usage:${NC}
  tw ${GREEN}sync${NC}
 
 ${BOLD}Commands:${NC}
- ${GREEN}timer${NC}       Run a task for n minutes.
+ ${GREEN}timer${NC}       Starts a pomodoro for a task.
  ${GREEN}notebook${NC}    Return a notebook for a given.
  ${GREEN}notebooks${NC}   Show all notebooks.
  ${GREEN}backlog${NC}     Return the backlog of tasks.
@@ -51,29 +42,22 @@ ${GREEN}--h${NC}elp     Display this help.
 
 process_timer() {
     if [[ "$#" -lt 1 ]]; then
-        printf "${RED}Usage: tw timer 5 25${NC}\n"
+        printf "${RED}Usage: tw timer 5${NC}\n"
         exit 1
-    fi
-
-    local INTERVAL=1500
-    if [ "$#" -eq 2 ]; then
-        INTERVAL=$(expr $2 \* 60)
     fi
 
     task $1 start &> /dev/null
 
-    if [ $? -ne 0 ]; then
+    if [[ $? -ne 0 ]]; then
         notify-send "Twtimer" "Task not available." --icon=dialog-error --urgency=normal
+        exit 1
+    elif [[ -z "$TMUX" ]]; then
+        notify-send "Twtimer" "It only works with tmux" --icon-dialog=error --urgency=normal
         exit 1
     fi
 
-(
-    notify-send "Twtimer" "Timer started" --icon=dialog-information --urgency=normal
-    sleep $INTERVAL
-    notify-send "Twtimer" "Timer stopped" --icon=dialog-information --urgency=critical
-    task $1 stop &> /dev/null
-    paplay $(__get_script_path)/twtimer.ogg
-) &
+    notify-send "Twtimer" "Starting task $1" --urgency=normal
+    tmux run-shell "$POMODORO_PLUGIN start"
 }
 
 process_notebook() {
@@ -117,8 +101,12 @@ process_stop() {
     local current=$(task active |awk 'NR==4 {print $1}')
 
     if [[ ! -z $current ]]; then
-        task $current stop
-        ps u |grep "tw timer $current" |awk 'NR==1 {print $2}' |xargs kill
+      task $current stop
+
+      if [[ ! -z "$TMUX" ]]; then
+          tmux run-shell "$POMODORO_PLUGIN stop"
+      fi
+
     fi
 }
 
