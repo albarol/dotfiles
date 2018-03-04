@@ -12,13 +12,13 @@ if [[ -z $(command -v inotifywait) ]]; then
 fi
 
 if [[ -z "$FSWATCH_NOTIFY" ]]; then
-    export FSWATCH_NOTIFY=1
+    export FSWATCH_NOTIFY=0
 fi
 
 
 message_help() {
 printf  "\
-\$ fswatch [mode] ( dir|file ) [command]
+\$ fswatch --notify [mode] ( dir|file ) [command]
 
 ${BOLD}Usage:${NC}
  fswatch ${GREEN}modify${NC}    ( dir|file ) [command]
@@ -72,8 +72,12 @@ process_watch_all() {
 }
 
 process_commands() {
-  local cmd=$1
+  if [[ "$1" == '--notify' ]]; then
+    export FSWATCH_NOTIFY=1
+    shift
+  fi
 
+  local cmd=$1
   case $cmd in
     modify) process_watch $@;;
     create) process_watch $@;;
