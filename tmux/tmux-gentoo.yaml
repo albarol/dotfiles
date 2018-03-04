@@ -4,7 +4,6 @@
   vars:
     plugins_path: "{{ ansible_env.HOME }}/.tmux/plugins"
 
-  pre_tasks:
 
   tasks:
 
@@ -22,7 +21,6 @@
         state: link
       with_items:
         - .tmux.conf
-        - .tmux
 
     - name: Install tmux plugin manager
       git:

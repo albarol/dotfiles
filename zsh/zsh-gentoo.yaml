@@ -1,0 +1,85 @@
+---
+- hosts: localhost
+  connection: local
+  vars:
+    fzf_version: "0.17.3"
+    fzf_plugin_path: "{{ ansible_env.HOME }}/.fzf"
+    omz_plugin_path: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/plugins"
+    zsh_bin_path: "{{ ansible_env.HOME }}/.zsh/bin"
+
+  tasks:
+
+#    - name: Install ZSH, GIT and CURL
+#      portage: package={{ item }} state=present
+#      become: true
+#      with_items:
+#        - git
+#        - curl
+#        - zsh
+#        - x11-misc/xclip
+#        - sys-apps/the_silver_searcher
+
+     - name: Install Oh-My-ZSH
+       shell: > 
+          sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+       args:
+         creates: "{{ ansible_env.HOME }}/.oh-my-zsh"
+ 
+     - name: Create ZSH Symlink
+       file:
+         src: "{{ playbook_dir }}/{{ item }}"
+         dest: "{{ ansible_env.HOME }}/{{ item }}"
+         state: link
+       with_items:
+         - .zshrc
+         - .zshrc.aliases
+         - .zsh-completions
+         - .zsh-configs
+         - .kanban.conf
+         - .desk
+ 
+     - name: Create ZSH Bin Symlink
+       file:
+         src: "{{ playbook_dir }}/../bin"
+         dest: "{{ zsh_bin_path }}"
+         state: link
+ 
+     - name: Install FZF
+       shell: >
+         curl -L "https://github.com/junegunn/fzf-bin/releases/download/{{ fzf_version }}/fzf-{{ fzf_version }}-linux_amd64.tgz" | tar -xvz;
+         mv "{{ playbook_dir }}/fzf" "{{ zsh_bin_path }}/fzf"
+       args:
+         creates: "{{ zsh_bin_path }}/fzf"
+ 
+     - name: Install FZF Plugin
+       shell: >
+         git clone --depth 1 https://github.com/junegunn/fzf.git "{{ fzf_plugin_path }}";
+         bash -c "yes | {{ fzf_plugin_path }}/install"
+       args:
+         creates: "{{ ansible_env.HOME }}/.fzf.zsh"
+ 
+     - name: Install ZSH Plugins
+       git:
+         repo: "{{ item.url }}"
+         dest: "{{ item.dest }}"
+       with_items:
+         - { url: "https://github.com/zsh-users/zsh-autosuggestions", dest: "{{ omz_plugin_path }}/zsh-autosuggestions" }
+         - { url: "https://github.com/zsh-users/zsh-syntax-highlighting", dest: "{{ omz_plugin_path }}/zsh-syntax-highlighting" }
+         - { url: "https://github.com/pasky/speedread", dest: "{{ omz_plugin_path }}/speedread" }
+ 
+     - name: Install Kanban
+       shell: >
+         curl -L https://raw.githubusercontent.com/fakeezz/kanban.bash/master/kanban > "{{ zsh_bin_path }}/kanban" &&
+         chmod +x "{{ zsh_bin_path }}/kanban"
+       args:
+         creates: "{{ zsh_bin_path }}/kanban"
+ 
+     - name: Install desk
+       shell: >
+         curl -L https://raw.githubusercontent.com/jamesob/desk/master/desk > "{{ zsh_bin_path }}/desk" &&
+           chmod +x "{{ zsh_bin_path }}/desk" &&
+           git clone git@github.com:jamesob/desk.git /tmp/desk &&
+           cp -r /tmp/desk/shell_plugins/zsh "{{ omz_plugin_path}}/desk";
+         rm -rf /tmp/desk
+       args:
+         creates: "{{ zsh_bin_path }}/desk"
