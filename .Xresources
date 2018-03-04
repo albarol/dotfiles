@@ -1,0 +1,68 @@
+! Font configuration
+xterm*faceName: xft:DejaVu Sans Mono for Powerline:pixelsize=16:antialias=true
+xterm*faceSize1: 8
+xterm*faceSize2: 10
+xterm*faceSize3: 12
+xterm*faceSize4: 16
+xterm*faceSize5: 22
+xterm*renderFont: true
+xterm*VT100*geometry: 94x28
+
+! Misc configuration
+xterm*termName: xterm-color256
+xterm*loginshell: true
+xterm*savelines: 16384
+xterm*charClass: 33:48,35:48,37:48,43:48,45-47:48,64:48,95:48,126:48
+xterm*selectToClipBoard: true
+xterm*scrollTtyOutput: true
+xterm*eightBitInput: false
+xterm*highlightSelection: true
+xterm*trimSelection: true
+xterm*VT100.Translations: #override \
+        Ctrl Shift <Key>V: insert-selection(CLIPBOARD) \n\
+        Ctrl Shift <Key>C: copy-selection(CLIPBOARD) \n\
+        Shift <Btn1Up>: exec-formatted("xdg-open '%t'", PRIMARY)
+        Ctrl <Key> minus: smaller-vt-font() \n\
+        Ctrl <Key> plus: larger-vt-font() \n\
+        Ctrl <Key> 0: set-vt-font(d)
+! themes
+! -----------------------
+
+! tomorrow-night
+
+*foreground: #c5c8c6
+*background: #1d1f21
+*cursorColor: #aeafad
+*color0: #000000
+*color1: #912226
+*color2: #778900
+*color3: #ae7b00
+*color4: #1d2594
+*color5: #682a9b
+*color6: #2b6651
+*color7: #929593
+*color8: #666666
+*color9: #cc6666
+*color10: #b5bd68
+*color11: #f0c674
+*color12: #81a2be
+*color13: #b294bb
+*color14: #8abeb7
+*color15: #ecebec
+
+! Set up scrollbars - get them, get them on the right side, and be
+! able to scroll them with the right,left, or middle mouse button
+xterm*ScrollBar: on
+*XTerm*scrollBar: true
+xterm*rightScrollBar: true
+xterm*multiScroll: on
+xterm*jumpScroll: on
+
+xterm*scrollbar.Translations: #override \n\
+  :StartScroll(Continous) MoveThumb() NotifyThumb()\n\
+  :MoveThumb() NotifyThumb() \n\
+  :StartScroll(Continous) MoveThumb() NotifyThumb()\n\
+  :MoveThumb() NotifyThumb() \n\
+  :StartScroll(Continous) MoveThumb() NotifyThumb()\n\
+  :MoveThumb() NotifyThumb() \n\
+  :NotifyScroll(Proportional) EndScroll()
