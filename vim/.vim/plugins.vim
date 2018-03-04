@@ -27,8 +27,6 @@ Plug 'ap/vim-css-color', { 'for': 'css' }
 
 " Editor
 Plug 'Yggdroot/indentLine'
-Plug 'easymotion/vim-easymotion'
-Plug 'scrooloose/nerdcommenter'
 
 " Prompt
 Plug 'vim-airline/vim-airline'

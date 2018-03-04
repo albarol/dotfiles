@@ -34,3 +34,5 @@ function! RunCTags()
   endif
 endfunction
 command! GenerateTags :call RunCTags()
+
+command! CompletePath :echo expand("%:p")
