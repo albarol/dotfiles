@@ -1,0 +1,207 @@
+#!/usr/bin/env bash
+
+GREEN="\e[32m"
+RED="\e[31m"
+DIM="\e[2m"
+BOLD="\e[1m"
+NC="\e[0m"
+
+if [[ -z "$NTB_PATH" ]]; then
+  export NTB_PATH=$HOME/.notebooks
+fi
+
+__slugify() {
+  echo "$@" | iconv -t ascii//TRANSLIT | sed -r s/[~\^]+//g | sed -r s/[^a-zA-Z0-9]+/-/g | sed -r s/^-+\|-+$//g | tr A-Z a-z
+}
+
+message_help() {
+  printf  "\
+    \$ ntb [comand] [arguments]
+
+  ${BOLD}Usage:${NC}
+  ntb ${GREEN}tasks${NC}    [year] [month]
+  ntb ${GREEN}task${NC}     [when]
+  ntb ${GREEN}projects${NC}
+  ntb ${GREEN}list${NC}     [project]
+  ntb ${GREEN}edit${NC}     <notebook>
+  ntb ${GREEN}rm${NC}       <notebook>
+  ntb ${GREEN}pdf${NC}      <notebook>
+  ntb ${GREEN}sync${NC}
+
+  ${BOLD}Commands:${NC}
+  ${GREEN}tasks${NC}        Show tasks for a period.
+  ${GREEN}task${NC}         Edit/Crete a task list.
+  ${GREEN}projects${NC}     Show all projects.
+  ${GREEN}list${NC}         List all notebooks.
+  ${GREEN}edit${NC}         Edit/Create a notebook.
+  ${GREEN}rm${NC}           Remove a notebook.
+  ${GREEN}pdf${NC}          Generate pdf for a notebook.
+  ${GREEN}sync${NC}         Sync all tasks and notebooks
+
+  ${BOLD}Options:${NC}
+  ${GREEN}--h${NC}elp        Display this help.
+  "
+}
+
+process_tasks() {
+  local TASK_PATH=$NTB_PATH/tasks
+
+  # append parameters as part of path
+  while [[ "$#" -gt 0 ]]
+  do
+    TASK_PATH=$TASK_PATH/$1
+    shift
+  done
+  cd $TASK_PATH
+
+  # fzf for mounted path
+  local FILENAME="$(fzf)"
+  if [[ -n $FILENAME ]]; then
+    $EDITOR $FILENAME
+  fi
+}
+
+process_task() {
+  if [[ "$#" -gt 1 ]]; then
+    printf "${RED}Usage: ntb tasks <when>${NC}\n"
+    exit 1
+  fi
+
+  # Get date and use today if it was not supplied
+  local WHEN=$1
+  if [[ -z $WHEN ]]; then
+    WHEN=$(date --iso-8601)
+  fi
+  WHEN=$(echo $WHEN |sed -re 's/-/\//g')
+
+  # Check if date has correct format
+  if [[ ! $WHEN =~ ^[0-9]{4}/[0-9]{2}/[0-9]{2}$ ]]; then
+    printf "${RED}Usage: ntb tasks <when>${NC}\n"
+    printf "${RED}       <when>: <yyyy-mm-dd>${NC}\n"
+    exit 1
+  fi
+
+  # Create task file if it does not exist
+  local COMPLETE_PATH=$NTB_PATH/tasks/$WHEN.tasks
+  if [[ ! -f $COMPLETE_PATH ]]; then
+    mkdir -p $(dirname "$COMPLETE_PATH")
+    echo "# Date: ${WHEN}" > $COMPLETE_PATH
+  fi
+
+  $EDITOR $COMPLETE_PATH
+}
+
+process_backlog() {
+  $EDITOR $NTB_PATH/tasks/backlog.tasks
+}
+
+process_search() {
+  if [ ! "$#" -gt 0 ]; then
+    printf "${RED}Usage: ntb search <pattern>${NC}\n"
+    exit 1
+  fi
+
+  cd $NTB_PATH
+  local PARAMS="$@"
+
+  # Use ag and fzf to search within notebooks
+  local SELECTION="$(ag --nobreak --noheading "${PARAMS}" |fzf)"
+  local FILENAME="$(echo $SELECTION | awk -F':' '{print $1}')"
+  local POSITION="$(echo $FILENAME | awk -F':' '{print $2}')"
+
+  # Check if file exists and also if $EDITOR is vim put cursor on correct line
+  if [[ -n $FILENAME ]]; then
+    $EDITOR $FILENAME "+$POSITION"
+  fi
+}
+
+process_edit() {
+  if [ ! "$#" -gt 1 ]; then
+    printf "${RED}Usage: ntb edit <filename>${NC}\n"
+    exit 1
+  fi
+
+  local FILENAME="${NTB_PATH}/$@"
+  if [[ ! -f "$FILENAME" ]]; then
+    FILENAME="$NTB_PATH/$(__slugify $@).md"
+    echo "# $@" > $FILENAME
+  fi
+  $EDITOR $FILENAME
+}
+
+process_projects() {
+  ls $NTB_PATH| grep -v tasks
+}
+
+process_list() {
+  local TASK_PATH=$NTB_PATH
+
+  # append parameters as part of path
+  while [[ "$#" -gt 0 ]]
+  do
+    TASK_PATH=$TASK_PATH/$1
+    shift
+  done
+  cd $TASK_PATH
+
+  local FILENAME=$(ag --ignore-dir="tasks" --nobreak --noheading -g "" |fzf --preview 'head -100 {}')
+  if [[ -n "$FILENAME" ]]; then
+    $EDITOR $FILENAME
+  fi
+}
+
+process_remove() {
+  cd $NTB_PATH
+  local FILENAME=$(fzf --preview 'head -100 {}')
+
+  if [[ -n "$FILENAME" ]]; then
+    rm $FILENAME
+  fi
+}
+
+process_misc_sync() {
+  cd $NTB_PATH
+
+  local SYNCED_MESSAGE="[Sync] synced at $(date '+%Y-%m-%d %H:%M')"
+  local MSG_COMMIT="$SYNCED_MESSAGE"
+
+  if [[ -n "$1" ]]; then
+    MSG_COMMIT=$1
+  fi
+
+  if [[ -n $(git status --porcelain) ]]; then
+    git add --all
+    git commit -m "$MSG_COMMIT" &> /dev/null
+  fi
+  git pull origin master &> /dev/null
+  git push origin master &> /dev/null
+  echo $SYNCED_MESSAGE
+}
+
+process_commands() {
+  local cmd=$1
+  shift
+
+  case $cmd in
+    tasks) process_tasks $@;;
+    task) process_task $@;;
+    backlog) process_backlog;;
+    search) process_search "$@";;
+    edit) process_edit "$@";;
+    remove) process_remove $@;;
+    pdf) process_pdf $@;;
+    projects) process_projects;;
+    list) process_list $@;;
+    sync) process_misc_sync;;
+    *) message_help;;
+  esac
+}
+
+
+if [[ "${@:-1}" = "--help" ]] && [[ "$#" -eq 1 ]]; then
+  message_help && exit 0
+elif [[ "$#" -ge 1 ]]; then
+  process_commands $@
+else
+  message_help && exit 0
+fi
