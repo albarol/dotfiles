@@ -16,7 +16,7 @@ __slugify() {
 
 message_help() {
   printf  "\
-    \$ ntb [comand] [arguments]
+\$ ntb [comand] [arguments]
 
   ${BOLD}Usage:${NC}
   ntb ${GREEN}tasks${NC}    [year] [month]
@@ -82,7 +82,7 @@ process_task() {
   fi
 
   # Create task file if it does not exist
-  local COMPLETE_PATH=$NTB_PATH/tasks/$WHEN.tasks
+  local COMPLETE_PATH=$NTB_PATH/tasks/$WHEN.md
   if [[ ! -f $COMPLETE_PATH ]]; then
     mkdir -p $(dirname "$COMPLETE_PATH")
     echo "# Date: ${WHEN}" > $COMPLETE_PATH
@@ -92,7 +92,7 @@ process_task() {
 }
 
 process_backlog() {
-  $EDITOR $NTB_PATH/tasks/backlog.tasks
+  $EDITOR $NTB_PATH/tasks/backlog.md
 }
 
 process_search() {

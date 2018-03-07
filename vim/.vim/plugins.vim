@@ -24,6 +24,7 @@ Plug 'w0rp/ale'
 
 " Languages
 Plug 'ap/vim-css-color', { 'for': 'css' }
+Plug 'shime/vim-livedown', { 'for': 'markdown' }
 
 " Editor
 Plug 'Yggdroot/indentLine'
