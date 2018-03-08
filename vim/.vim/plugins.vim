@@ -73,4 +73,7 @@ let g:marvim_store_key = '<C-m>k'
 let g:marvim_prefix_on_load = 0
 
 " Hooks
-autocmd BufWritePre * :%s/\s\+$//e
+augroup RemoveWhiteSpace
+  autocmd!
+  autocmd BufWritePre * :%s/\s\+$//e
+augroup END
