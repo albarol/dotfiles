@@ -45,17 +45,23 @@ message_help() {
 
 process_tasks() {
   local TASK_PATH=$NTB_PATH/tasks
+  local FILENAME;
 
-  # append parameters as part of path
-  while [[ "$#" -gt 0 ]]
-  do
-    TASK_PATH=$TASK_PATH/$1
-    shift
-  done
-  cd $TASK_PATH
+  if [[ "$1" == "opened" ]]; then
+    cd $TASK_PATH
+    FILENAME="$(grep -l '\[ \]' -R */**|fzf)"
+  else
+    # append parameters as part of path
+    while [[ "$#" -gt 0 ]]
+    do
+      TASK_PATH=$TASK_PATH/$1
+      shift
+    done
+    cd $TASK_PATH
+    FILENAME="$(fzf)"
+  fi
 
   # fzf for mounted path
-  local FILENAME="$(fzf)"
   if [[ -n $FILENAME ]]; then
     $EDITOR $FILENAME
   fi
