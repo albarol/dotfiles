@@ -8,6 +8,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'gabesoft/vim-ags', { 'on': 'Ags' }
 Plug 'mhinz/vim-startify'
 Plug 'fakeezz/marvim'
+Plug 'simnalamburt/vim-mundo', { 'on': ['MundoToggle', 'MundoShow'] }
 
 " CVS (Content Version Control)
 Plug 'airblade/vim-gitgutter'

@@ -7,6 +7,9 @@ map <left> <nop>
 map <down> <nop>
 map <right> <nop>
 
+cnoremap <c-n> <down>
+cnoremap <c-p> <up>
+
 
 """""""""""""
 " Shotcurts "

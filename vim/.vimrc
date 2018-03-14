@@ -34,6 +34,11 @@ set backspace=indent,eol,start
 set autoindent
 set nofoldenable
 
+set timeout           " for mappings
+set timeoutlen=1000
+set ttimeout          " for key codes
+set ttimeoutlen=10
+
 setglobal complete=.,w,b,u,t
 setlocal complete=.,w,b,u,t
 

@@ -36,3 +36,4 @@ endfunction
 command! GenerateTags :call RunCTags()
 
 command! CompletePath :echo expand("%:p")
+command! RelativePath :echo expand("%")
