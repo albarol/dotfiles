@@ -22,6 +22,7 @@ Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 " IDE
 Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
 Plug 'w0rp/ale'
+Plug 'SirVer/ultisnips'
 
 " Languages
 Plug 'ap/vim-css-color', { 'for': 'css' }
@@ -72,6 +73,12 @@ let $FZF_DEFAULT_COMMAND = 'ag -l -g ""'
 let g:marvim_find_key = '<C-m>f'
 let g:marvim_store_key = '<C-m>k'
 let g:marvim_prefix_on_load = 0
+
+let g:UltiSnipsEnableSnipMate = 0
+let g:UltiSnipsSnippetDirectories = [$HOME.'/.snippets/']
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-n>"
+let g:UltiSnipsJumpBackwardTrigger="<c-p>"
 
 " Hooks
 augroup RemoveWhiteSpace
