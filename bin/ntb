@@ -10,10 +10,6 @@ if [[ -z "$NTB_PATH" ]]; then
   export NTB_PATH=$HOME/.notebooks
 fi
 
-__slugify() {
-  echo "$@" | iconv -t ascii//TRANSLIT | sed -r s/[~\^]+//g | sed -r s/[^a-zA-Z0-9]+/-/g | sed -r s/^-+\|-+$//g | tr A-Z a-z
-}
-
 message_help() {
   printf  "\
 \$ ntb [comand] [arguments]
@@ -122,15 +118,21 @@ process_search() {
 }
 
 process_edit() {
-  if [ ! "$#" -gt 1 ]; then
+  if [ "$#" -ne 1 ]; then
     printf "${RED}Usage: ntb edit <filename>${NC}\n"
     exit 1
   fi
 
-  local FILENAME="${NTB_PATH}/$@"
+  local DIRNAME=$(dirname "$@")
+  local BASENAME=$(basename "$@")
+
+  if [[ ! -d $DIRNAME ]]; then
+    mkdir -p "$NTB_PATH/$DIRNAME"
+  fi
+
+  local FILENAME="${NTB_PATH}/$DIRNAME/$BASENAME.md"
   if [[ ! -f "$FILENAME" ]]; then
-    FILENAME="$NTB_PATH/$(__slugify $@).md"
-    echo "# $@" > $FILENAME
+    echo "# $BASENAME" > $FILENAME
   fi
   $EDITOR $FILENAME
 }
