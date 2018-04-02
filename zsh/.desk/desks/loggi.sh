@@ -1,3 +1,4 @@
+#!/bin/env bash
 # loggi.sh
 #
 # Description: Loggi utilities
