@@ -6,6 +6,11 @@ DIM="\e[2m"
 BOLD="\e[1m"
 NC="\e[0m"
 
+SUCCESS=0
+NO_ARGUMENT=1
+EXIT=2
+
+
 message_help() {
 printf  "\
 \$ edocker [comand] [arguments]
@@ -37,6 +42,39 @@ ${BOLD}Commands:${NC}
 ${BOLD}Options:${NC}
 ${GREEN}--h${NC}elp     Display this help.
 "
+}
+
+
+__resolve_container_name() {
+    IFS=" "
+    local CONTAINERS=( $(docker ps -a -q --filter "name=$1" |tr '\n' ' ') )
+    local OPTIONS=( $(docker ps -a --filter "name=$1" | awk 'NR>1{print $NF}' |tr '\n' ' ') )
+    local COUNT=${#CONTAINERS[@]}
+    unset IFS
+
+    if [[ $COUNT -eq 0 ]]; then
+      echo "$NO_ARGUMENT;"
+    fi
+
+    if [[ $COUNT -gt 1 ]]; then
+      OPTIONS+=('Quit')
+      select opt in "${OPTIONS[@]}"
+      do
+        if [[ $opt == 'Quit' ]]; then
+          echo "$EXIT;"
+        fi
+
+        for item in $(seq 0 ${#OPTIONS[@]}); do
+          if [[ ${OPTIONS[$item]} == $opt ]]; then
+            local CONTAINER=${CONTAINERS[$item]}
+            break 2
+          fi
+        done
+      done
+      echo "$SUCCESS;$CONTAINER"
+    else
+      echo "$SUCCESS;${CONTAINERS[0]}"
+    fi
 }
 
 
@@ -91,15 +129,18 @@ process_logs() {
         exit 1
     fi
 
-    local container=$(docker ps -a -q --filter "name=$1")
+    local RESULT=$(__resolve_container_name $1)
+    local CODE=$(echo $RESULT | awk -F';' '{print $1}')
+    local CONTENT=$(echo $RESULT | awk -F';' '{print $2}')
 
-    if [[ $(echo $container |wc -w) -ne 1 ]]; then
+    if [[ $CODE == $NO_ARGUMENT ]]; then
         printf "${RED}Usage: edocker logs <container>${NC}\n"
-        printf "${RED}Please, choose a unique name${NC}\n"
+        printf "${RED}Input a valid container name${NC}\n"
         exit 1
     fi
 
-    docker logs -f -t $container
+    docker logs -f -t $CONTENT
+    exit 0
 }
 
 process_exec() {
@@ -134,15 +175,17 @@ process_bash() {
         exit 1
     fi
 
-    local container=$(docker ps -a -q --filter "name=$1")
+    local RESULT=$(__resolve_container_name $1)
+    local CODE=$(echo $RESULT | awk -F';' '{print $1}')
+    local CONTAINER=$(echo $RESULT | awk -F';' '{print $2}')
 
-    if [[ $(echo $container |wc -w) -ne 1 ]]; then
+    if [[ $CODE == $NO_ARGUMENT ]]; then
         printf "${RED}Usage: edocker bash <container>${NC}\n"
-        printf "${RED}Please, choose an unique name${NC}\n"
+        printf "${RED}Input a valid container name${NC}\n"
         exit 1
     fi
 
-    docker exec -it $container bash
+    docker exec -it $CONTAINER bash
 
     exit 0
 }
