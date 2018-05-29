@@ -40,6 +40,7 @@ function! GetBreakpoint()
   echo l:breakpoint
 endfunction
 
+
 """"""""""""""""
 " => Editor    "
 """"""""""""""""
@@ -67,3 +68,4 @@ noremap <silent> <C-_>t :term python<CR>
 " Commands
 command! PytestPath :call GetPytestPath()
 command! Breakpoint :call GetBreakpoint()
+command! Isort :!isort %
