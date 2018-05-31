@@ -1,6 +1,3 @@
 
 *.retry
 
-bin/fzf
-bin/desk
-bin/kanban
