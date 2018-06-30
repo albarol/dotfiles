@@ -6,4 +6,4 @@ endfunction
 command! PrettyJson call PrettifyJson()
 
 " Hooks
-autocmd BufEnter *.json :PrettyJson
+" autocmd BufEnter *.json :PrettyJson
