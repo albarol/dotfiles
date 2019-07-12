@@ -12,6 +12,14 @@
         repo: https://github.com/pyenv/pyenv.git
         dest: "{{ pyenv_path }}"
 
+
+    - name: Check whether pyenv is configured
+      command: grep "PYENV_ROOT" "{{ usr_profile }}"
+      register: checkpyenv
+      check_mode: no
+      ignore_errors: yes
+      changed_when: no
+
     - name: Configure pyenv environment
       shell: |
         printf '
@@ -22,3 +30,10 @@
         \teval "$(pyenv init -)"
         fi
         ' >> "{{ usr_profile }}"
+      when: checkpyenv.rc == 1
+
+    - name: Install poetry
+      shell: >
+        curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
+      args:
+        creates: "{{ ansible_env.HOME }}/.poetry"
