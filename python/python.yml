@@ -2,10 +2,23 @@
 - hosts: localhost
   connection: local
   vars:
-    pyenv_path: "{{ ansible_env.HOME }}/.pyenv"
+    pyenv_path:  "{{ ansible_env.HOME }}/.pyenv"
+    usr_profile: "{{ ansible_env.HOME }}/.zshrc.user"
 
   tasks:
 
     - name: Clone pyenv repo
-      shell: >
-        git clone https://github.com/pyenv/pyenv.git "{{ pyenv_path }}"
+      git:
+        repo: https://github.com/pyenv/pyenv.git
+        dest: "{{ pyenv_path }}"
+
+    - name: Configure pyenv environment
+      shell: |
+        printf '
+        # pyenv config
+        export PYENV_ROOT="$HOME/.pyenv"
+        export PATH="$PYENV_ROOT/bin:$PATH"
+        if command -v pyenv 1>/dev/null 2>&1; then
+        \teval "$(pyenv init -)"
+        fi
+        ' >> "{{ usr_profile }}"
