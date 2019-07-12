@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  connection: local
+  vars:
+    pyenv_path: "{{ ansible_env.HOME }}/.pyenv"
+
+  tasks:
+
+    - name: Clone pyenv repo
+      shell: >
+        git clone https://github.com/pyenv/pyenv.git "{{ pyenv_path }}"
