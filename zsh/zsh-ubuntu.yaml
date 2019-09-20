@@ -72,13 +72,6 @@
         - { url: "https://github.com/zsh-users/zsh-syntax-highlighting", dest: "{{ omz_plugin_path }}/zsh-syntax-highlighting" }
         - { url: "https://github.com/pasky/speedread", dest: "{{ omz_plugin_path }}/speedread" }
 
-    - name: Install Kanban
-      shell: >
-        curl -L https://raw.githubusercontent.com/fakeezz/kanban.bash/master/kanban > "{{ zsh_bin_path }}/kanban" &&
-        chmod +x "{{ zsh_bin_path }}/kanban"
-      args:
-        creates: "{{ zsh_bin_path }}/kanban"
-
     - name: Install desk
       shell: >
         curl -L https://raw.githubusercontent.com/jamesob/desk/master/desk > "{{ zsh_bin_path }}/desk" &&
