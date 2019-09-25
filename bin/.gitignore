@@ -1,4 +1,5 @@
-fzf
-desk
-kanban
-youtube-dl
+!fswatch
+!edocker
+!ectags
+!gi
+*
