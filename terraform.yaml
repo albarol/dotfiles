@@ -1,0 +1,26 @@
+---
+- hosts: localhost
+  connection: local
+  vars:
+    version: "0.12.9"
+
+  tasks:
+
+    - name: Check if terraform is configured
+      command: stat "{{ ansible_env.HOME }}/.zsh/bin/terraform"
+      register: checkterraform
+      check_mode: no
+      ignore_errors: yes
+      changed_when: no
+
+    - name: Downloading terraform
+      get_url:
+        url: "https://releases.hashicorp.com/terraform/{{ version }}/terraform_{{ version }}_linux_amd64.zip"
+        dest: "/tmp/terraform.zip"
+      when: checkterraform.rc == 1
+
+    - name: Extract terraform
+      unarchive:
+        src: "/tmp/terraform.zip"
+        dest: "{{ ansible_env.HOME }}/.zsh/bin"
+      when: checkterraform.rc == 1
