@@ -9,12 +9,6 @@
 
   tasks:
 
-    - name: Install utilities
-      become: true
-      apt: name={{ item }} state=present
-      with_items:
-        - cmus
-
     - name: Install languages environment
       become: true
       apt: name={{ item }} state=present
