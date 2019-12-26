@@ -234,7 +234,7 @@ process_clean() {
     }
 
     run_clean_command() {
-        local containers=$(docker ps -a |grep $1)
+        local containers=$(docker ps -a |grep $1 | awk '{print $1}' | tr " " "\n")
         local force=""
 
         if [[ $(echo $containers |wc -w) -gt 1 ]]; then
@@ -245,8 +245,8 @@ process_clean() {
 
             printf "${DIM}Cleaning containers.${NC}\n"
 
-            for container in "${containers[@]}"; do
-                local cid=$(echo $container |awk '{print $1}')
+
+            for cid in "${containers[@]}"; do
                 docker rm $force$cid
             done
         fi

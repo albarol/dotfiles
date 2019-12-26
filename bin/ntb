@@ -168,6 +168,10 @@ process_remove() {
 }
 
 process_misc_sync() {
+  if [[ ! -e $NTB_PATH ]]; then
+    git clone git@bitbucket.org:programmerka/byte-recipes.git $NTB_PATH
+  fi
+
   cd $NTB_PATH
 
   local SYNCED_MESSAGE="[Sync] synced at $(date '+%Y-%m-%d %H:%M')"
