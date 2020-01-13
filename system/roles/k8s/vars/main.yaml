@@ -1,0 +1,3 @@
+---
+os: linux
+k8s_bin_dir: "/usr/local/bin"

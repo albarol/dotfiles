@@ -1,0 +1,13 @@
+---
+
+- import_tasks: debian.yaml
+  when: ansible_facts['os_family']|lower == 'debian'
+  tags: [common, install]
+
+- name: Install FZF
+  unarchive:
+    src: "{{ fzf_url }}"
+    dest: "{{ fzf_bin_dir }}"
+    remote_src: yes
+    creates: "{{ fzf_bin_dir }}/fzf"
+  tags: [common, install]

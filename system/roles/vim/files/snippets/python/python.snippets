@@ -1,0 +1,60 @@
+snippet #!
+#!/usr/bin/env python
+endsnippet
+
+snippet imp
+import ${0:module}
+endsnippet
+
+snippet from
+from ${1:package} import ${0:module}
+endsnippet
+
+snippet wh
+while ${1:condition}:
+    ${0:${VISUAL}}
+endsnippet
+
+snippet with
+with ${1:expr} as ${2:var}:
+    ${0:${VISUAL}}
+endsnippet
+
+snippet class
+class ${1:ClassName}(${2:object}):
+
+    def __init__(self):
+        ${0}
+endsnippet
+
+snippet def
+def ${1:fname}(${2:`indent('.') ? 'self' : ''`}):
+	${0}
+endsnippet
+
+snippet coding
+# coding: utf-8
+endsnippet
+
+snippet lambda
+lambda ${1:vars}: ${0:action}
+endsnippet
+
+snippet tryexc
+try:
+	${1:${VISUAL}}
+except ${2:Exception} as ${3:e}:
+	${0:raise $3}
+endsnippet
+
+snippet lcp
+[${1} for ${2} in ${3:${VISUAL}}]${0}
+endsnippet
+
+snippet dcp
+{${1}: ${2} for ${3} in ${4:${VISUAL}}}${0}
+endsnippet
+
+snippet scp
+{${1} for ${2} in ${3:${VISUAL}}}${0}
+endsnippet

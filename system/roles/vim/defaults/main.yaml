@@ -1,0 +1,8 @@
+---
+vim_plug_dir: "{{ ansible_env.HOME }}/.vim/autoload"
+vim_plug_url: "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+
+vim_extensions:
+  - vimrc
+  - vim
+  - marvim

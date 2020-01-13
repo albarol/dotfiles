@@ -1,0 +1,11 @@
+---
+zsh_omz_url: "https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh"
+zsh_omz_dir: "{{ ansible_env.HOME }}/.oh-my-zsh"
+zsh_omz_fzf_url: "https://github.com/junegunn/fzf.git"
+zsh_omz_fzf_dir: "{{ ansible_env.HOME }}/.fzf"
+
+zsh_configs:
+  - zshrc
+  - zshrc.aliases
+  - desk
+  - conf

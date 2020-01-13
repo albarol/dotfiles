@@ -1,0 +1,9 @@
+---
+common_packages:
+  - git
+  - silversearcher-ag
+  - curl
+
+fzf_version: "0.20.0"
+fzf_url: "https://github.com/junegunn/fzf-bin/releases/download/{{ fzf_version }}/fzf-{{ fzf_version }}-linux_amd64.tgz"
+fzf_bin_dir: "/usr/local/bin"

@@ -1,0 +1,45 @@
+snippet class
+public class ${1}
+{
+    ${0}
+}
+endsnippet
+
+snippet using
+using ${0};
+endsnippet
+
+
+snippet tclass
+using System;
+
+namespace ${1}
+{
+    public class ${2}
+	{
+		${0}
+	}
+}
+endsnippet
+
+
+snippet tmstest
+using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace ${1}
+{
+    public class ${2}
+	{
+		[TestMethod]
+		public void ${3}()
+		{
+			${0}
+		}
+	}
+}
+endsnippet
+
+snippet prop
+public ${1} ${2} { get; set; }
+endsnippet
