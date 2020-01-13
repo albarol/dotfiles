@@ -51,3 +51,8 @@ fi
 # Load FZF Plugins
 [ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh
 [ -n "$DESK_ENV" ] && source "$DESK_ENV" || true
+
+# History config
+export HISTCONTROL=ignoreboth:erasedups
+export HISTFILESIZE=10000
+export HISTSIZE=10000

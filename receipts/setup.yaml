@@ -9,6 +9,14 @@
 
   tasks:
 
+    - name: Install dev tools
+      become: true
+      apt: name={{ item }} state=present
+      with_items:
+        - git
+        - curl
+        - xclip
+
     - name: Install languages environment
       become: true
       apt: name={{ item }} state=present

@@ -25,6 +25,7 @@ Plug 'SirVer/ultisnips'
 
 " Languages
 Plug 'shime/vim-livedown', { 'for': 'markdown' }
+Plug 'hashivim/vim-terraform', { 'for': 'terraform' }
 
 " Prompt
 Plug 'vim-airline/vim-airline'

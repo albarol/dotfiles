@@ -11,7 +11,9 @@
 
     - name: update cache
       become: true
-      apt: update_cache=yes cache_valid_time=3600
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
 
   tasks:
 
@@ -19,10 +21,7 @@
       apt: name={{ item }} state=present update_cache=no
       become: true
       with_items:
-        - git
-        - curl
         - zsh
-        - xclip
         - silversearcher-ag
 
     - name: Install Oh-My-ZSH
@@ -37,15 +36,15 @@
         state: link
       with_items:
         - .zshrc
+        - .zshrc.user
         - .zshrc.aliases
         - .zsh-completions
         - .zsh-configs
-        - .kanban.conf
         - .desk
 
     - name: Create ZSH Bin Symlink
       file:
-        src: "{{ playbook_dir }}/../bin"
+        src: "{{ playbook_dir }}/../../bin"
         dest: "{{ zsh_bin_path }}"
         state: link
 

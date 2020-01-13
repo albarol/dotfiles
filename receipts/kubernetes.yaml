@@ -1,0 +1,75 @@
+---
+- hosts: localhost
+  connection: local
+  vars:
+    bin_path: "{{ ansible_env.HOME }}/.zsh/bin"
+    kubectl_version: v1.16.1
+    helm_version: v2.15.1
+
+  tasks:
+
+    - name: Check if kubectl is configured
+      command: stat "{{ ansible_env.HOME }}/.zsh/bin/kubectl"
+      register: check_kubectl
+      check_mode: no
+      ignore_errors: yes
+      changed_when: no
+
+    - name: Downloading kubectl
+      get_url:
+        url: "https://storage.googleapis.com/kubernetes-release/release/{{ kubectl_version }}/bin/linux/amd64/kubectl"
+        dest: "{{ bin_path }}/kubectl"
+
+    - name: Make kubectl executable
+      file:
+        path: "{{ bin_path }}/kubectl"
+        mode: u=rwx,g=r,o=r
+
+    - name: Check if helm is configured
+      command: stat "{{ bin_path }}/helm"
+      register: checkhelm
+      check_mode: no
+      ignore_errors: yes
+      changed_when: no
+
+    - name: Downloading helm
+      get_url:
+        url: "https://get.helm.sh/helm-{{ helm_version }}-linux-amd64.tar.gz"
+        dest: "/tmp/helm.tar.gz"
+      when: checkhelm.rc == 1
+
+    - name: Extract helm
+      unarchive:
+        src: "/tmp/helm.tar.gz"
+        dest: "/tmp"
+      when: checkhelm.rc == 1
+
+    - name: Copy helm files
+      copy:
+        src: "/tmp/linux-amd64/{{ item }}"
+        dest: "{{ bin_path }}/{{ item }}"
+        mode: u=rwx,g=r,o=r
+      with_items:
+        - helm
+        - tiller
+
+    - name: Downloading minikube
+      get_url:
+        url: "https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64"
+        dest: "{{ bin_path }}/minikube"
+        mode: u=rwx,g=r,o=r
+
+    - name: Make minikube executable
+      file:
+        path: "{{ bin_path }}/minikube"
+        mode: u=rwx,g=r,o=r
+
+    - name: Downloading Skaffold
+      get_url:
+        url: "https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64"
+        dest: "{{ bin_path }}/skaffold"
+
+    - name: Make skaffold executable
+      file:
+        path: "{{ bin_path }}/skaffold"
+        mode: u=rwx,g=r,o=r

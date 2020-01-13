@@ -6,12 +6,22 @@
 
   pre_tasks:
 
+    - name: update cache
+      become: true
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
   tasks:
 
     - name: Install tmux
       become: true
-      portage: package={{ item }} state=present
-      with_items:
+      apt:
+        name: "{{ packages }}"
+        state: present
+        update_cache: no
+      vars:
+        packages:
         - tmux
         - gawk
 
@@ -22,7 +32,6 @@
         state: link
       with_items:
         - .tmux.conf
-        - .tmux
 
     - name: Install tmux plugin manager
       git:
