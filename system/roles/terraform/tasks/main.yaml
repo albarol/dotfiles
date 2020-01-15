@@ -1,0 +1,9 @@
+---
+
+- name: Install terraform
+  unarchive:
+    src: "{{ tf_url }}"
+    dest: "{{ tf_bin_dir }}"
+    remote_src: yes
+    creates: "{{ tf_bin_dir }}/terraform"
+  tags: [tf, install]
