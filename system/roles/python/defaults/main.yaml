@@ -1,0 +1,10 @@
+---
+
+py_pyenv_url: "https://github.com/pyenv/pyenv.git"
+py_pyenv_dir: "{{ ansible_env.HOME }}/.pyenv"
+py_pyenv_version: v1.2.16
+
+py_venv_url: "https://github.com/pyenv/pyenv-virtualenv.git"
+py_venv_dir: "{{ py_pyenv_dir }}/plugins/pyenv-virtualenv"
+py_venv_version: v1.1.5
+

@@ -1,0 +1,13 @@
+---
+
+- name: Install pyenv
+  git:
+    repo: "{{ py_pyenv_url }}"
+    dest: "{{ py_pyenv_dir }}"
+    version: "{{ py_pyenv_version }}"
+
+- name: Install pyenv virtualenv
+  git:
+    repo: "{{ py_venv_url }}"
+    dest: "{{ py_venv_dir }}"
+    version: "{{ py_venv_version }}"
