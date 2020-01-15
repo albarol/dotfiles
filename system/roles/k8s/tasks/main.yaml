@@ -1,4 +1,35 @@
 ---
-- import_tasks: debian.yaml
-  when: ansible_facts['os_family']|lower == 'debian'
+
+- name: Install kubectl
+  get_url:
+    url: "{{ k8s_kubectl_url }}"
+    dest: "{{ k8s_bin_dir }}/kubectl"
+    mode: u=rwx,g=r,o=r
+  tags: [k8s, install]
+
+- name: Download helm
+  unarchive:
+    src: "{{ k8s_helm_url }}"
+    dest: "/tmp"
+    remote_src: yes
+    creates: "{{ k8s_bin_dir }}/helm"
+  register: download_helm
+  tags: [k8s, download]
+
+- name: Install helm
+  copy:
+    src: "/tmp/{{ os }}-amd64/{{ item }}"
+    dest: "{{ k8s_bin_dir }}/{{ item }}"
+    mode: u=rwx,g=r,o=r
+  with_items:
+    - helm
+    - tiller
+  when: not download_helm.skipped
+  tags: [k8s, install]
+
+- name: Install minikube
+  get_url:
+    url: "{{ k8s_minikube_url }}"
+    dest: "{{ k8s_bin_dir }}/minikube"
+    mode: u=rwx,g=r,o=r
   tags: [k8s, install]
