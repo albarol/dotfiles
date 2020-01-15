@@ -1,5 +1,4 @@
 ---
-
 - name: Install kubectl
   get_url:
     url: "{{ k8s_kubectl_url }}"

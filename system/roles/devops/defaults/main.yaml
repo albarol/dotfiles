@@ -1,5 +1,6 @@
 ---
 
+# Kubernetes
 k8s_kubectl_version: v1.16.1
 k8s_kubectl_url: "https://storage.googleapis.com/kubernetes-release/release/{{ k8s_kubectl_version }}/bin/{{ os }}/amd64/kubectl"
 
@@ -7,3 +8,12 @@ k8s_helm_version: v2.15.1
 k8s_helm_url: "https://get.helm.sh/helm-{{ k8s_helm_version }}-{{ os }}-amd64.tar.gz"
 
 k8s_minikube_url: "https://storage.googleapis.com/minikube/releases/latest/minikube-{{ os }}-amd64"
+
+
+# Terraform
+tf_version: 0.12.9
+tf_url: "https://releases.hashicorp.com/terraform/{{ tf_version }}/terraform_{{ tf_version }}_{{ os }}_amd64.zip"
+tf_bin_dir: "/usr/local/bin"
+
+# AWS CLI
+awscli_version: 1.17.2

@@ -15,4 +15,5 @@
   with_items:
     - xclip
     - unzip
+    - python-pip
   tags: [common, install]

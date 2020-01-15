@@ -1,4 +1,0 @@
----
-tf_version: 0.12.9
-tf_url: "https://releases.hashicorp.com/terraform/{{ tf_version }}/terraform_{{ tf_version }}_{{ os }}_amd64.zip"
-tf_bin_dir: "/usr/local/bin"

@@ -3,7 +3,6 @@
 alias tmux='TERM=screen-256color tmux -2'
 alias temp="$EDITOR /tmp/$(uuidgen)"
 
-
 # Functions
 
 # speedmem
