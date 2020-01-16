@@ -1,5 +1,0 @@
-# object-curly-space
-s/\{ *([a-zA-Z0-9]+) *\}/{\1}/g
-
-# quotes
-s/"(.*)"/'\1'/g

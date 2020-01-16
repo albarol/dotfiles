@@ -1,0 +1,22 @@
+---
+
+- name: Install common packages
+  become: true
+  apt:
+    name: "{{ common_packages }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  tags: [common, install]
+
+- name: Install debian packages
+  become: true
+  apt:
+    name: "{{ debian_packages }}"
+    state: present
+  tags: [common, install]
+
+- name: Configure locale
+  locale_gen:
+    name: en_US.UTF-8
+    state: present

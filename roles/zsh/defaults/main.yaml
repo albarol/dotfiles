@@ -1,0 +1,30 @@
+---
+fzf_version: "0.20.0"
+fzf_url: "https://github.com/junegunn/fzf-bin/releases/download/{{ fzf_version }}/fzf-{{ fzf_version }}-{{ os }}_amd64.tgz"
+fzf_bin_dir: "/usr/local/bin"
+
+fzf_plugin_url: "https://raw.githubusercontent.com/junegunn/fzf/{{ fzf_version }}/shell/key-bindings.zsh"
+fzf_plugin_path: "{{ ansible_env.HOME }}/.fzf.zsh"
+
+zsh_omz_url: "https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh"
+zsh_omz_dir: "{{ ansible_env.HOME }}/.oh-my-zsh"
+zsh_omz_plugin_dir: "{{ zsh_omz_dir }}/custom/plugins"
+
+
+zsh_plugins:
+  - name: zsh-autosuggestions
+    url: https://github.com/zsh-users/zsh-autosuggestions
+    version: v0.6.4
+  - name: zsh-syntax-highlighting
+    url: https://github.com/zsh-users/zsh-syntax-highlighting
+    version: 0.6.0
+  - name: speedread
+    url: https://github.com/pasky/speedread
+    version: master
+
+zsh_configs:
+  - zshrc
+  - desk
+  - conf
+  - bin
+  - commands

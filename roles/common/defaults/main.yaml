@@ -1,0 +1,12 @@
+---
+common_packages:
+  - git
+  - silversearcher-ag
+  - curl
+
+
+debian_packages:
+  - xclip
+  - unzip
+  - python-pip
+  - locales

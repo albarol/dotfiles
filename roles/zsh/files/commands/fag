@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+FILE="$(ag --nobreak --noheading $@ | fzf)"
+NAME="$(echo $FILE | awk -F':' '{print $1}')"
+POSITION="$(echo $FILE | awk -F':' '{print $2}')"
+
+if [[ -n $FILE ]]
+then
+    vim $NAME "+$POSITION"
+fi

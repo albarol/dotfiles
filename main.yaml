@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  connection: local
+  roles:
+    - common
+    - zsh
+    - vim
+    - tmux
+    - python
+    - devops

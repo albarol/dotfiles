@@ -1,0 +1,7 @@
+---
+- name: Install tmux
+  become: true
+  apt:
+    name: "{{ tmux_packages }}"
+    state: present
+    update_cache: no

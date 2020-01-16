@@ -1,0 +1,9 @@
+---
+tmux_tpm_url: "https://github.com/tmux-plugins/tpm.git"
+tmux_tpm_dir: "{{ ansible_env.HOME }}/.tmux/plugins/tpm"
+tmux_tpm_version: v3.0.0
+
+
+tmux_packages:
+  - tmux
+  - gawk

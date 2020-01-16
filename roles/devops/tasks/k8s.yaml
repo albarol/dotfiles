@@ -1,0 +1,37 @@
+---
+- name: Install kubectl
+  become: true
+  get_url:
+    url: "{{ k8s_kubectl_url }}"
+    dest: "{{ k8s_bin_dir }}/kubectl"
+    mode: u=rwx,g=rx,o=rx
+  tags: [k8s, install]
+
+- name: Download helm
+  unarchive:
+    src: "{{ k8s_helm_url }}"
+    dest: "/tmp"
+    remote_src: yes
+    creates: "{{ k8s_bin_dir }}/helm"
+  register: download_helm
+  tags: [k8s, download]
+
+- name: Install helm
+  become: true
+  copy:
+    src: "/tmp/{{ os }}-amd64/{{ item }}"
+    dest: "{{ k8s_bin_dir }}/{{ item }}"
+    mode: u=rwx,g=rx,o=r
+  with_items:
+    - helm
+    - tiller
+  when: download_helm.skipped is not defined
+  tags: [k8s, install]
+
+- name: Install minikube
+  become: true
+  get_url:
+    url: "{{ k8s_minikube_url }}"
+    dest: "{{ k8s_bin_dir }}/minikube"
+    mode: u=rwx,g=rx,o=rx
+  tags: [k8s, install]

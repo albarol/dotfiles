@@ -1,0 +1,8 @@
+---
+- name: Install ZSH
+  become: true
+  apt:
+    name: zsh
+    state: present
+  tags: [zsh, install]
+

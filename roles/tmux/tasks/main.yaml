@@ -1,0 +1,19 @@
+---
+
+- import_tasks: debian.yaml
+  when: ansible_facts['os_family']|lower == 'debian'
+  tags: [tmux, install]
+
+- name: Configure tmux
+  file:
+    src: "{{ role_path }}/files/tmux.conf"
+    dest: "{{ ansible_env.HOME }}/.tmux.conf"
+    state: link
+    force: yes
+  tags: [tmux, configure]
+
+- name: Install tmux plugin manager
+  git:
+    repo: "{{ tmux_tpm_url }}"
+    dest: "{{ tmux_tpm_dir }}"
+    version: "{{ tmux_tpm_version }}"

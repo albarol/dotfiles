@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+NAME=$(fzf --preview 'head -100 {}')
+
+if [[ -n "$NAME" ]]; then
+    vim $NAME
+fi

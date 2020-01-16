@@ -1,1 +1,0 @@
-:%!sed -re "s/u?'/\"/g":%!sed -re "s/None/null/g":set filetype=json:PrettyJson

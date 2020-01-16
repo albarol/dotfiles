@@ -1,0 +1,42 @@
+---
+- import_tasks: debian.yaml
+  when: ansible_facts['os_family']|lower == 'debian'
+  tags: [zsh, install]
+
+- name: Install Oh-My-ZSH
+  shell: >
+      curl -fsSL "{{ zsh_omz_url }}" | sh
+  args:
+    creates: "{{ zsh_omz_dir }}"
+  tags: [zsh, install]
+
+- name: Configure ZSH
+  file:
+    src: "{{ role_path }}/files/{{ item }}"
+    dest: "{{ ansible_env.HOME }}/.{{ item }}"
+    state: link
+    force: yes
+  with_items: "{{ zsh_configs }}"
+  tags: [zsh, configure]
+
+- name: Install ZSH Plugins
+  git:
+    repo: "{{ item.url }}"
+    dest: "{{ zsh_omz_plugin_dir }}/{{ item.name }}"
+    version: "{{ item.version }}"
+  with_items: "{{ zsh_plugins }}"
+  tags: [zsh, install]
+
+- name: Install FZF
+  unarchive:
+    src: "{{ fzf_url }}"
+    dest: "{{ fzf_bin_dir }}"
+    remote_src: yes
+    creates: "{{ fzf_bin_dir }}/fzf"
+  tags: [zsh, install]
+
+- name: Install FZF Plugin
+  get_url:
+    url: "{{ fzf_plugin_url }}"
+    dest: "{{ fzf_plugin_path }}"
+  tags: [zsh, install]
