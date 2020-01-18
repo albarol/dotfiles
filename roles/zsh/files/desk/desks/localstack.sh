@@ -4,8 +4,6 @@
 #
 # Description: aws cli using localstack
 
-pyenv activate devops
-
 alias lrun='docker run --rm --name localstack -p 4567-4599:4567-4599 -p 8099:8080 -v /var/run/docker.sock:/var/run/docker.sock localstack/localstack'
 alias lstop='docker stop localstack'
 
