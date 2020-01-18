@@ -3,7 +3,7 @@
 - import_tasks: k8s.yaml
   tags: [devops, install]
 
-- import_tasks: tf.yaml
+- import_tasks: hashicorp.yaml
   tags: [devops, install]
 
 - import_tasks: awscli.yaml

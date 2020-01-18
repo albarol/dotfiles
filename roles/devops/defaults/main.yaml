@@ -15,5 +15,10 @@ tf_version: 0.12.9
 tf_url: "https://releases.hashicorp.com/terraform/{{ tf_version }}/terraform_{{ tf_version }}_{{ os }}_amd64.zip"
 tf_bin_dir: "/usr/local/bin"
 
+# Vault
+vault_version: 1.3.1
+vault_url: "https://releases.hashicorp.com/vault/{{ vault_version }}/vault_{{ vault_version }}_{{ os }}_amd64.zip"
+vault_bin_dir: "/usr/local/bin"
+
 # AWS CLI
 awscli_version: 1.17.2

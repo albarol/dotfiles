@@ -1,0 +1,19 @@
+---
+- name: Install terraform
+  become: true
+  unarchive:
+    src: "{{ tf_url }}"
+    dest: "{{ tf_bin_dir }}"
+    remote_src: yes
+    creates: "{{ tf_bin_dir }}/terraform"
+  tags: [tf, install]
+
+
+- name: Install vault
+  become: true
+  unarchive:
+    src: "{{ vault_url }}"
+    dest: "{{ vault_bin_dir }}"
+    remote_src: yes
+    creates: "{{ vault_bin_dir }}/vault"
+  tags: [vault, install]
