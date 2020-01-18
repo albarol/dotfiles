@@ -28,15 +28,24 @@
   tags: [zsh, install]
 
 - name: Install FZF
+  become: true
   unarchive:
     src: "{{ fzf_url }}"
-    dest: "{{ fzf_bin_dir }}"
+    dest: "{{ zsh_bin_dir }}"
     remote_src: yes
-    creates: "{{ fzf_bin_dir }}/fzf"
+    creates: "{{ zsh_bin_dir }}/fzf"
   tags: [zsh, install]
 
 - name: Install FZF Plugin
   get_url:
     url: "{{ fzf_plugin_url }}"
     dest: "{{ fzf_plugin_path }}"
+  tags: [zsh, install]
+
+- name: Install desk
+  become: true
+  get_url:
+    url: "{{ zsh_desk_url }}"
+    dest: "{{ zsh_bin_dir }}/desk"
+    mode: u=rwx,g=rx,o=rx
   tags: [zsh, install]
