@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+
+GREEN="\e[32m"
+RED="\e[31m"
+DIM="\e[2m"
+BOLD="\e[1m"
+NC="\e[0m"
+
+message_help() {
+printf  "\
+\$ gbucket [comand] [arguments]
+
+${BOLD}Usage:${NC}
+ gbucket ${GREEN}pull${NC}
+ gbucket ${GREEN}sync${NC} <app>
+ gbucket ${GREEN}configure${NC}
+
+${BOLD}Commands:${NC}
+ ${GREEN}pull${NC}        Get lastest information from server.
+ ${GREEN}sync${NC}        Generate version of bucket.
+ ${GREEN}configure${NC}   Configure Git Bucket.
+
+${BOLD}Options:${NC}
+${GREEN}--h${NC}elp     Display this help.
+"
+}
+
+
+process_configure() {
+  printf "Git bucket: "
+  BUCKET_URL=$(read -s url; printf $url)
+  printf "$BUCKET_URL\n"
+
+  if [[ -z $BUCKET_URL ]]; then
+    printf "${RED}Please provide any git url.${NC}\n"
+    exit 1
+  fi
+
+  git clone $BUCKET_URL $GBUCKET_PATH
+}
+
+
+process_pull() {
+  if [[ ! -d $GBUCKET_PATH ]]; then
+    printf "${RED}Please run ${NC}${BOLD}gbucket configure${NC}${RED} to create bucket.${NC}\n"
+    exit 1
+  fi
+
+  cd $GBUCKET_PATH
+  git pull origin master
+  exit 0
+}
+
+
+process_commands() {
+    local cmd=$1
+    shift
+
+    case $cmd in
+        c|configure) process_configure $@;;
+        p|pull) process_pull;;
+        *) message_help;;
+    esac
+}
+
+
+if [[ "${@:-1}" = "--help" ]] && [[ "$#" -eq 1 ]]; then
+    message_help && exit 0
+elif [[ "$#" -ge 1 ]]; then
+    process_commands $@
+else
+    message_help && exit 0
+fi

@@ -38,6 +38,7 @@ alias tmux='TERM=screen-256color tmux -2'
 
 # Plugins configuration
 export PATH=$PATH:$HOME/.bin:$HOME/.commands
+export GBUCKET_PATH=$HOME/.gbucket
 export FZF_DEFAULT_OPTS="--color=16 -0"
 export FZF_CTRL_T_OPTS="--preview 'head -200 {}' --bind '?:toggle-preview'"
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
