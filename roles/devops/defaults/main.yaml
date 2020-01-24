@@ -22,3 +22,4 @@ vault_bin_dir: "/usr/local/bin"
 
 # AWS CLI
 awscli_version: 1.17.2
+yq_version: 2.10.0

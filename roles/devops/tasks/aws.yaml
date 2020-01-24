@@ -1,0 +1,13 @@
+---
+
+- name: Install awscli
+  become: true
+  pip:
+    name: "awscli=={{ awscli_version }}"
+  tags: [aws, install]
+
+- name: Install yq
+  become: true
+  pip:
+    name: "yq=={{ yq_version }}"
+  tags: [aws, install]

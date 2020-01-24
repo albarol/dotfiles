@@ -4,7 +4,10 @@
 #
 # Description: aws cli using localstack
 
+# Run docker localstack container
 alias lrun='docker run --rm --name localstack -p 4567-4599:4567-4599 -p 8099:8080 -v /var/run/docker.sock:/var/run/docker.sock localstack/localstack'
+
+# Stop docker localstack container
 alias lstop='docker stop localstack'
 
 #Starting local Elasticsearch (http port 4571)...
