@@ -5,7 +5,7 @@
 # Description: aws cli using localstack
 
 # Run docker localstack container
-alias lrun='docker run --rm --name localstack -p 4567-4599:4567-4599 -p 8099:8080 -v /var/run/docker.sock:/var/run/docker.sock localstack/localstack'
+alias lrun='docker run --rm --name localstack -e LAMBDA_EXECUTOR=docker-reuse -p 4567-4599:4567-4599 -p 8099:8080 -v /var/run/docker.sock:/var/run/docker.sock localstack/localstack'
 
 # Stop docker localstack container
 alias lstop='docker stop localstack'
@@ -42,3 +42,18 @@ alias sqs='aws --endpoint-url=http://localhost:4576 sqs'
 alias ssm='aws --endpoint-url=http://localhost:4583 ssm'
 alias sts='aws --endpoint-url=http://localhost:4592 sts'
 alias stepfunctions='aws --endpoint-url=http://localhost:4585 stepfunctions'
+
+
+# Show all info about api
+api_describe() {
+  local API_INFO=$(apigtw get-rest-apis | jq -r '.items[0]')
+  printf "API: $(echo $API_INFO | jq -r '.name')\n====================\n"
+  apigtw get-resources --rest-api-id $(echo $API_INFO | jq -r '.id')
+}
+
+# Show route to access apigateway
+api_route() {
+  local ID=$(apigtw get-rest-apis | jq -r '.items[0].id')
+  local STAGE=$(apigtw get-stages --rest-api-id $ID | jq -r '.item[0].stageName')
+  printf "http://localhost:4567/restapis/$ID/$STAGE/_user_request_"
+}
