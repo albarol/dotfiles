@@ -16,12 +16,12 @@ printf  "\
 \$ hpass [comand] [arguments]
 
 ${BOLD}Usage:${NC}
- hpass ${GREEN}user${NC}  <site>
- hpass ${GREEN}pass${NC}  <site>
+ hpass ${GREEN}user${NC}  <dns>
+ hpass ${GREEN}pass${NC}  <dns>
 
 ${BOLD}Commands:${NC}
- ${GREEN}user${NC}   Create hash user based on site.
- ${GREEN}pass${NC}   Create hash password based on site.
+ ${GREEN}user${NC}   Create hash user based on dns.
+ ${GREEN}pass${NC}   Create hash password based on dns.
 
 ${BOLD}Options:${NC}
 ${GREEN}--h${NC}elp     Display this help.
@@ -31,7 +31,7 @@ ${GREEN}--h${NC}elp     Display this help.
 
 process_user() {
   if [[ $# -ne 1 ]]; then
-    printf "${RED}Usage: hpass user <site> ${NC}\n"
+    printf "${RED}Usage: hpass user <dns> ${NC}\n"
     exit 1
   fi
 
@@ -42,14 +42,14 @@ process_user() {
 
 process_pass() {
   if [[ $# -ne 1 ]]; then
-    printf "${RED}Usage: hpass pass <site> ${NC}\n"
+    printf "${RED}Usage: hpass pass <dns> ${NC}\n"
     exit 1
   fi
 
   printf "Master Password: ";
   PASSWD=$(read -s password; printf $password)
 
-  printf "*$PASSWD+$1*" | openssl dgst -sha1 -r | awk -F ' ' '{print $1}'
+  printf "$1:$PASSWD" | openssl dgst -sha1 -r | awk -F ' ' '{print $1}'
 }
 
 process_commands() {
