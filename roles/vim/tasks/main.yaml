@@ -21,6 +21,6 @@
 
 - name: Install Plug (Plugin Manager)
   get_url:
-    dest: "{{ vim_plug_dir}}/plugin.vim"
+    dest: "{{ vim_plug_dir}}/plug.vim"
     url: "{{ vim_plug_url }}"
   tags: [vim, configure]
