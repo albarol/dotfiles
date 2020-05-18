@@ -49,7 +49,7 @@ process_pass() {
   printf "Master Password: ";
   PASSWD=$(read -s password; printf $password)
 
-  printf "$1:$PASSWD" | openssl dgst -sha1 -r | awk -F ' ' '{print $1}'
+  printf "$1:$PASSWD" | openssl dgst -sha1 -r | awk -F ' ' '{print $1}' | sed -s 's/\([ace]\)/\U\1/g'
 }
 
 process_commands() {
