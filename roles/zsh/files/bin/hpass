@@ -21,7 +21,7 @@ ${BOLD}Usage:${NC}
 
 ${BOLD}Commands:${NC}
  ${GREEN}user${NC}   Create hash user based on dns.
- ${GREEN}pass${NC}   Create hash password based on dns.
+ ${GREEN}pass${NC}   [--special] Create hash password based on dns.
 
 ${BOLD}Options:${NC}
 ${GREEN}--h${NC}elp     Display this help.
@@ -41,15 +41,35 @@ process_user() {
 
 
 process_pass() {
-  if [[ $# -ne 1 ]]; then
-    printf "${RED}Usage: hpass pass <dns> ${NC}\n"
+
+  __special_chars() {
+    NUMBERS=$(printf $1 | sed -s 's/[a-zA-Z]//g')
+    for((i=0;i<${#NUMBERS};i++)); do ((sum+=${NUMBERS:i:1})); done
+    if (( $sum & 1 )); then
+      printf "*"
+    else
+      printf "!"
+    fi
+  }
+
+  if [[ $# -gt 2 ]]; then
+    printf "${RED}Usage: hpass pass [--special] <dns> ${NC}\n"
     exit 1
   fi
+
+  DNS=$1
 
   printf "Master Password: ";
   PASSWD=$(read -s password; printf $password)
 
-  printf "$1:$PASSWD" | openssl dgst -sha1 -r | awk -F ' ' '{print $1}' | sed -s 's/\([ace]\)/\U\1/g'
+  HASH=$(printf "$DNS:$PASSWD" | openssl sha1 -r | awk -F ' ' '{print $1}')
+
+  if [[ $2 == '--special' ]]; then
+    SPECIAL_CHARS=$(__special_chars $HASH)
+    printf "$SPECIAL_CHARS$HASH$SPECIAL_CHARS" | sed -s 's/\([ace]\)/\U\1/g'
+  else
+    printf $HASH
+  fi
 }
 
 process_commands() {
