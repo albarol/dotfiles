@@ -3,10 +3,11 @@ common_packages:
   - git
   - silversearcher-ag
   - curl
+  - jq
 
 
 debian_packages:
   - xclip
   - unzip
-  - python-pip
+  - python3-pip
   - locales
