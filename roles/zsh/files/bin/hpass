@@ -1,93 +1,72 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python3
 
-GREEN="\e[32m"
-RED="\e[31m"
-DIM="\e[2m"
-BOLD="\e[1m"
-NC="\e[0m"
-
-SUCCESS=0
-NO_ARGUMENT=1
-EXIT=2
+import argparse
+import sys
+import hashlib
+import getpass
 
 
-message_help() {
-printf  "\
-\$ hpass [comand] [arguments]
+def main(argv=None):
+  parser = argparse.ArgumentParser(
+    prog="hpass",
+    description="Hash password generator",
+    epilog=""
+  )
 
-${BOLD}Usage:${NC}
- hpass ${GREEN}user${NC}  <dns>
- hpass ${GREEN}pass${NC}  <dns>
+  subparsers = parser.add_subparsers(required=True)
 
-${BOLD}Commands:${NC}
- ${GREEN}user${NC}   Create hash user based on dns.
- ${GREEN}pass${NC}   [--special] Create hash password based on dns.
+  user_cmd = subparsers.add_parser('user')
+  user_cmd.add_argument('--dns', required=True, help="dns name; e.g: google.com")
+  user_cmd.add_argument('--size', default=10, type=int, help="name size")
+  user_cmd.set_defaults(func=exec_user)
 
-${BOLD}Options:${NC}
-${GREEN}--h${NC}elp     Display this help.
-"
-}
+  passw_cmd = subparsers.add_parser('pass')
+  passw_cmd.add_argument('--dns', required=True, help="dns name; e.g: google.com")
+  passw_cmd.add_argument('-c', '--complexity', choices=["basic", "medium", "complex"], default="basic", help="password complexity")
+  passw_cmd.add_argument('-u', '--uppercase', action="store_true", dest="has_uppercase", help="include uppercase")
+  passw_cmd.add_argument('-x', '--special', action="store_true", dest="special", help="include special characters")
+  passw_cmd.set_defaults(func=exec_password)
 
-
-process_user() {
-  if [[ $# -ne 1 ]]; then
-    printf "${RED}Usage: hpass user <dns> ${NC}\n"
-    exit 1
-  fi
-
-  printf "$1" | openssl dgst -sha256 -r | openssl dgst -sha1 -r | head -c 10
-  exit 0
-}
-
-
-process_pass() {
-
-  __special_chars() {
-    NUMBERS=$(printf $1 | sed -s 's/[a-zA-Z]//g')
-    for((i=0;i<${#NUMBERS};i++)); do ((sum+=${NUMBERS:i:1})); done
-    if (( $sum & 1 )); then
-      printf "*"
-    else
-      printf "!"
-    fi
-  }
-
-  if [[ $# -gt 2 ]]; then
-    printf "${RED}Usage: hpass pass [--special] <dns> ${NC}\n"
-    exit 1
-  fi
-
-  DNS=$1
-
-  printf "Master Password: ";
-  PASSWD=$(read -s password; printf $password)
-
-  HASH=$(printf "$DNS:$PASSWD" | openssl sha1 -r | awk -F ' ' '{print $1}')
-
-  if [[ $2 == '--special' ]]; then
-    SPECIAL_CHARS=$(__special_chars $HASH)
-    printf "$SPECIAL_CHARS$HASH$SPECIAL_CHARS" | sed -s 's/\([ace]\)/\U\1/g'
-  else
-    printf $HASH
-  fi
-}
-
-process_commands() {
-    local cmd=$1
-    shift
-
-    case $cmd in
-        u|user) process_user $@;;
-        p|pass) process_pass $@;;
-        *) message_help;;
-    esac
-}
+  try:
+    args = parser.parse_args(argv[1:] or ['-h'])
+    args.func(args)
+  except (TypeError, KeyboardInterrupt):
+    parser.print_help()
 
 
-if [[ "${@:-1}" = "--help" ]] && [[ "$#" -eq 1 ]]; then
-    message_help && exit 0
-elif [[ "$#" -ge 1 ]]; then
-    process_commands $@
-else
-    message_help && exit 0
-fi
+def exec_user(args):
+  user = args.dns.encode('utf8')
+  user = hashlib.sha1(user).hexdigest()
+  print(user[:args.size])
+
+
+def exec_password(args):
+  complexity = {"basic": 12, "medium": 24, "complex": 40}
+  size = complexity[args.complexity]
+
+  passw = getpass.getpass(prompt="Master password: ")
+  passw = passw.encode('utf8')
+  passw = hashlib.sha1(passw).hexdigest()
+
+  if args.special:
+    symbols = ["*", "!"]
+    result = []
+    for idx, letter in enumerate(passw):
+      if idx > 0 and idx % 3 == 0:
+        letter = symbols[idx & 1]
+      result.append(letter)
+    passw = ''.join(result)
+
+  if args.has_uppercase:
+    chars = ["a", "e"]
+    result = []
+    for letter in passw:
+      letter = letter.upper() if letter in chars else letter
+      result.append(letter)
+    passw = ''.join(result)
+
+  print(passw[:size])
+
+
+if __name__ == '__main__':
+  main(sys.argv)
