@@ -44,7 +44,8 @@ def exec_password(args):
   complexity = {"basic": 12, "medium": 24, "complex": 40}
   size = complexity[args.complexity]
 
-  passw = getpass.getpass(prompt="Master password: ")
+  mpassw = getpass.getpass(prompt="Master password: ")
+  passw = f'{mpassw}:{args.dns}'
   passw = passw.encode('utf8')
   passw = hashlib.sha1(passw).hexdigest()
 
