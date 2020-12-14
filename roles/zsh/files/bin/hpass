@@ -4,6 +4,7 @@ import argparse
 import sys
 import hashlib
 import getpass
+import base64
 
 
 def main(argv=None):
@@ -22,8 +23,7 @@ def main(argv=None):
 
   passw_cmd = subparsers.add_parser('pass')
   passw_cmd.add_argument('--dns', required=True, help="dns name; e.g: google.com")
-  passw_cmd.add_argument('-c', '--complexity', choices=["basic", "medium", "complex"], default="basic", help="password complexity")
-  passw_cmd.add_argument('-u', '--uppercase', action="store_true", dest="has_uppercase", help="include uppercase")
+  passw_cmd.add_argument('-s', '--size', default=12, type=int, help="password size")
   passw_cmd.add_argument('-x', '--special', action="store_true", dest="special", help="include special characters")
   passw_cmd.set_defaults(func=exec_password)
 
@@ -41,32 +41,23 @@ def exec_user(args):
 
 
 def exec_password(args):
-  complexity = {"basic": 12, "medium": 24, "complex": 40}
-  size = complexity[args.complexity]
-
   mpassw = getpass.getpass(prompt="Master password: ")
   passw = f'{mpassw}:{args.dns}'
   passw = passw.encode('utf8')
-  passw = hashlib.sha1(passw).hexdigest()
+  passw = base64.b64encode(hashlib.sha1(passw).digest())
+
+  passw = passw[:args.size].decode('utf8')
 
   if args.special:
     symbols = ["*", "!"]
     result = []
     for idx, letter in enumerate(passw):
-      if idx > 0 and idx % 3 == 0:
+      if idx > 0 and idx % 7 == 0:
         letter = symbols[idx & 1]
       result.append(letter)
     passw = ''.join(result)
 
-  if args.has_uppercase:
-    chars = ["a", "e"]
-    result = []
-    for letter in passw:
-      letter = letter.upper() if letter in chars else letter
-      result.append(letter)
-    passw = ''.join(result)
-
-  print(passw[:size])
+  print(passw)
 
 
 if __name__ == '__main__':
