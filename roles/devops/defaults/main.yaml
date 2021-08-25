@@ -1,13 +1,16 @@
 ---
 
 # Kubernetes
-k8s_kubectl_version: v1.16.1
+k8s_kubectl_version: v1.21.2
 k8s_kubectl_url: "https://storage.googleapis.com/kubernetes-release/release/{{ k8s_kubectl_version }}/bin/{{ os }}/amd64/kubectl"
 
-k8s_helm_version: v2.15.1
+k8s_helm_version: v3.6.1
 k8s_helm_url: "https://get.helm.sh/helm-{{ k8s_helm_version }}-{{ os }}-amd64.tar.gz"
 
 k8s_minikube_url: "https://storage.googleapis.com/minikube/releases/latest/minikube-{{ os }}-amd64"
+
+k8s_kubebuilder_version: 3.1.0
+k8s_kubebuilder_url: "https://go.kubebuilder.io/dl/{{ k8s_kubebuilder_version }}/{{ os }}/amd64"
 
 
 # Terraform

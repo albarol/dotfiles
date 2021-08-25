@@ -35,3 +35,11 @@
     dest: "{{ k8s_bin_dir }}/minikube"
     mode: u=rwx,g=rx,o=rx
   tags: [k8s, install]
+
+- name: Install kubebuilder
+  become: true
+  get_url:
+    url: "{{ k8s_kubebuilder_url }}"
+    dest: "{{ k8s_bin_dir }}/kubebuilder"
+    mode: u=rwx,g=rx,o=rx
+  tags: [k8s, install]
