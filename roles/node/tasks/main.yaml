@@ -1,0 +1,8 @@
+---
+
+- name: Install nvm
+  shell: >
+    curl -o- "{{ nvm_url }}" | bash
+  args:
+    creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
+  tags: [node, install]

@@ -1,0 +1,5 @@
+---
+
+nvm_url: "https://raw.githubusercontent.com/nvm-sh/nvm/{{nvm_version}}/install.sh"
+nvm_version: v0.38.0
+
