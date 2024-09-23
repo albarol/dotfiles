@@ -17,6 +17,7 @@
   tags: [common, install]
 
 - name: Configure locale
+  become: true
   locale_gen:
     name: en_US.UTF-8
     state: present

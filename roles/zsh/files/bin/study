@@ -1,0 +1,68 @@
+#!/usr/bin/env python3
+
+import argparse
+import sys
+import os
+import json
+import math
+
+CFG_PATH = f'{os.path.expanduser("~")}/.study.cfg'
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(
+        prog="study",
+        description="Generic tools for a student",
+        epilog=""
+    )
+
+    subparsers = parser.add_subparsers(required=True)
+
+    cycle_cmd = subparsers.add_parser('cycle')
+    cycle_cmd.add_argument('-s', '--subjects', nargs='+', type=int, required=True, help="list of subjects")
+    cycle_cmd.add_argument('--hours', default=12, type=int, help="number of hours of study")
+    cycle_cmd.add_argument('-p', '--pomodoro', action='store_true', help='show time in pomodoro sessions')
+    cycle_cmd.set_defaults(func=exec_cycle, pomodoro=False)
+
+    cycle_list_cmd = subparsers.add_parser('subjects')
+    cycle_list_cmd.set_defaults(func=exec_subjects)
+
+
+    try:
+        args = parser.parse_args(argv[1:] or ['-h'])
+        args.func(args)
+    except (TypeError, KeyboardInterrupt) as err:
+        print(err)
+        parser.print_help()
+
+
+def exec_cycle(args):
+    with open(CFG_PATH) as fd:
+        cfg = json.loads(fd.read())
+
+    subjects = sorted(cfg.items(), key=lambda x: x[1])
+    difficulty = 0
+    for (idx, (k, v)) in enumerate(subjects):
+        if idx in args.subjects:
+            difficulty += v
+
+    weight = args.hours / difficulty
+
+    for (idx, (k, v)) in enumerate(subjects):
+        if idx in args.subjects:
+            qty = math.floor(weight * v) if v > 1 else 2
+            qty = qty * (2 if args.pomodoro else 1)
+            print(f'{idx: <3}{k:<20}{"□" * qty:<10} ({qty})')
+
+
+def exec_subjects(args):
+    # read cfg file {"topic1": <difficulty:1-5>, "topic2": <difficulty:1-5>}
+    with open(CFG_PATH) as fd:
+        cfg = json.loads(fd.read())
+
+    for (idx, (k, v)) in enumerate(sorted(cfg.items(), key=lambda x: x[1])):
+        print(f'{idx: <3}{k:<20}{"□" * v}')
+
+
+if __name__ == '__main__':
+  main(sys.argv)

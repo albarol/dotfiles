@@ -19,10 +19,10 @@ debian_packages:
   - libsqlite3-dev
   - wget
   - llvm
-  - libncurses5-dev
-  - libncursesw5-dev
-  - xz-utils
-  - tk-dev
-  - libffi-dev
-  - liblzma-dev
-  - python-openssl
+    #  - libncurses5-dev
+    #  - libncursesw5-dev
+    #  - xz-utils
+    #  - tk-dev
+    #  - libffi-dev
+    #  - liblzma-dev
+    #  - python3-openssl

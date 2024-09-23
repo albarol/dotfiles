@@ -49,3 +49,8 @@
     dest: "{{ zsh_bin_dir }}/desk"
     mode: u=rwx,g=rx,o=rx
   tags: [zsh, install]
+
+- name: Configure ZSH
+  shell: >
+    chsh -s $(which zsh)
+  tags: [zsh, configure]
